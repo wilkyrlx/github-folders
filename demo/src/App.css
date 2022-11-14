@@ -1,0 +1,12 @@
+li {
+  border-radius: 10px;
+  margin-bottom: 10px;
+  width: 400px;
+  border:2px solid green;
+  border-radius: 5px;
+  display: flex;
+  padding:0px 50px 20px 0px;
+  font-weight: bold;
+  background:rgb(192, 230, 192);
+  }
+  
