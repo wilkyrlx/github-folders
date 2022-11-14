@@ -1,5 +1,6 @@
 import React from 'react';
-import './App.css';
+
+import './App.css'
 
 import { listData } from './assets/listData'
 import DraggableList from './components/list/DraggableList';
@@ -19,5 +20,5 @@ export default function App() {
     );
 }
 
-const LessonCard = item => <Card item={item}/>
+const LessonCard = (item: object | null | undefined) => <Card item={item}/>
 
