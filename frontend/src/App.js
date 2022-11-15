@@ -13,10 +13,7 @@ return (
 		onReorder={setItems}>
 	{items.map((item) => (
 	<Reorder.Item key={item} value={item} >
-		<div style={{color:'green', fontSize:20, width:'300px',
-			height:'30px', borderRadius:'2px',textAlign:'center',
-			marginLeft:'100px', marginTop:'20px',}}>
-							{item}</div>
+		<div className="stripe-item">{item}</div>
 	</Reorder.Item>
 	))}
 </Reorder.Group>
