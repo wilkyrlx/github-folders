@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ControlPanel } from "./ControlPanel";
 import StripeList from "./StripeList";
 
 
@@ -6,7 +7,10 @@ import StripeList from "./StripeList";
 
 function App() {
 	return (
-		<StripeList/>
+		<div className="app">
+			<ControlPanel/>
+			<StripeList/>
+		</div>
 	);
 }
 

@@ -7,5 +7,7 @@ The vision of this project is a simple, clean chrome extension to improve the gi
 
 This project is born out of frusturation with the limited UI for github, with different repos listed in different places. Additionally, the user will be able to group repos as they see fit into folders.
 
+## References
+*Note: not all are used in the final product*
 https://github.com/ghuser-io/github-contribs/blob/master/index.js <br>
 https://github.com/trananhtuat/react-draggable-list/tree/main/src/components

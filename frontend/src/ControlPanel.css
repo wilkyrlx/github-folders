@@ -1,0 +1,13 @@
+.control-panel {
+    background-color: royalblue;
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+}
+
+
+.control-panel[data-expanded="true"] {
+    width: 150px;
+    height: 35px;
+    border-radius: 20px;
+}
