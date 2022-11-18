@@ -9,26 +9,38 @@ function StripeList() {
 	 * target - repo opens in new tab, directory executes on page
 	 * TODO: check how chrome extensions work, repo may not have to open in new tab
 	 */ 
-	class stripeItem {
-		static readonly REPO = new stripeItem("/icons/folder.svg", "_blank")
-		static readonly DIRECTORY = new stripeItem("/icons/command-line.svg", "_self")
+	class stripeItemType {
+		static readonly REPO = new stripeItemType("/icons/folder.svg", "_blank")
+		static readonly DIRECTORY = new stripeItemType("/icons/command-line.svg", "_self")
 	
 		// private to disallow creating other instances of this type
 		private constructor(public readonly path: string, public readonly target: any) {
 		}
 	}
 
+	class stripeItem {
+		public name: string;
+		public link: string;
+		public typeItem:stripeItemType;
+		public id: number;
+		public children: number[] 
+		constructor(name:string, link:string, typeItem:stripeItemType, id:number, children:number[]){
+			this.id = id;
+			this.name = name;
+			this.link = link;
+			this.typeItem = typeItem;
+			this.children = children;
+		}
+	}
+
 	const [items, setItems] = useState([
-		{ name: "brown-poker", link:"https://github.com/wilkyrlx/brown-poker", typeItem:stripeItem.REPO, id: 1, children: [] },
-		{ name: "brown-ccg/ccg-website", link:"https://github.com/brown-ccg/ccg-website",  typeItem:stripeItem.REPO, id: 2, children: [] },
-		{ name: "esgaroth", link:"https://github.com/wilkyrlx/esgaroth",  typeItem:stripeItem.REPO, id: 3, children: [] },
-		{ name: "esgaroth-folder", link:"#", typeItem:stripeItem.DIRECTORY, id: 4, children: [3,1] },
+		new stripeItem("brown-poker", "https://github.com/wilkyrlx/brown-poker", stripeItemType.REPO, 1, [] ),
 
 	])
 
 	// this is the most disgusting code ever written
 	function handleClick(item: any) {
-		const isDirectory = item.typeItem == stripeItem.DIRECTORY
+		const isDirectory = item.typeItem == stripeItemType.DIRECTORY
 		if(isDirectory) {
 			let childItems = items.slice();
 			const allFiltered:any[] = [];

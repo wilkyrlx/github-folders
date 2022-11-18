@@ -6,6 +6,10 @@ import "./ControlPanel.css"
 function HomeButton() {
 
 
+    
+}
+
+function AddFolderButton() {
     const [expanded, setExpanded] = useState(false)
 
     return (
@@ -13,16 +17,15 @@ function HomeButton() {
             layout
             animate={expanded ? "open" : "closed"}
             onClick={() => setExpanded(!expanded)}
-            className="control-panel"
+            className="add-folder-button expand-button"
             data-expanded={expanded}
             style={{
                 borderRadius: '20px'
             }}
-        ></motion.div>
+        >
+            
+        </motion.div>
     )
-}
-
-function AddFolderButton() {
 
 }
 
@@ -37,7 +40,8 @@ function LinkAccountButton() {
 function ControlPanel() {
     return (
         <div className="control-panel">
-            <HomeButton />
+            <AddFolderButton />
+            <AddFolderButton />
         </div>
     )
 
