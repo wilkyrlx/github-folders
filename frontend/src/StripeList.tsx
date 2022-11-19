@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Reorder } from "framer-motion";
-import "./StripeList.css"
+import "./styles/StripeList.css"
 
 function StripeList() {
 	/**
@@ -18,24 +18,34 @@ function StripeList() {
 		}
 	}
 
+	interface stripeItemProps {
+		name: string;
+		link: string;
+		typeItem:stripeItemType;
+		id: number;
+		children: number[] 
+	}
+
 	class stripeItem {
 		public name: string;
 		public link: string;
 		public typeItem:stripeItemType;
 		public id: number;
 		public children: number[] 
-		constructor(name:string, link:string, typeItem:stripeItemType, id:number, children:number[]){
-			this.id = id;
-			this.name = name;
-			this.link = link;
-			this.typeItem = typeItem;
-			this.children = children;
+		constructor(item:stripeItemProps){
+			this.id = item.id;
+			this.name = item.name;
+			this.link = item.link;
+			this.typeItem = item.typeItem;
+			this.children = item.children;
 		}
 	}
 
 	const [items, setItems] = useState([
-		new stripeItem("brown-poker", "https://github.com/wilkyrlx/brown-poker", stripeItemType.REPO, 1, [] ),
-
+		new stripeItem({ name: "brown-poker", link:"https://github.com/wilkyrlx/brown-poker", typeItem:stripeItemType.REPO, id: 1, children: [] }),
+		new stripeItem({ name: "brown-ccg/ccg-website", link:"https://github.com/brown-ccg/ccg-website",  typeItem:stripeItemType.REPO, id: 2, children: [] }),
+		new stripeItem({ name: "esgaroth", link:"https://github.com/wilkyrlx/esgaroth",  typeItem:stripeItemType.REPO, id: 3, children: [] }),
+		new stripeItem({ name: "esgaroth-folder", link:"#", typeItem:stripeItemType.DIRECTORY, id: 4, children: [3,1] }),
 	])
 
 	// this is the most disgusting code ever written

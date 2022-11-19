@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion"
-import "./ControlPanel.css"
+import "./styles/ControlPanel.css"
 
 
 function HomeButton() {
