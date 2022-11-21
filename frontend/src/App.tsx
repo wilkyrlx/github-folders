@@ -8,7 +8,6 @@ import StripeList from "./StripeList";
 function App() {
 	return (
 		<div className="app">
-			<ControlPanel/>
 			<StripeList/>
 		</div>
 	);

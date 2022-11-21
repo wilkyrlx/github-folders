@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
 import "./styles/ControlPanel.css"
+import { stripeItem, stripeItemType } from "./components/StripeItem";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -28,7 +29,7 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
 }
 
 // make edits to this one first
-function AddFolderButton() {
+function AddFolderButton(props: {setItems: Dispatch<SetStateAction<stripeItem[]>>}) {
     const [expanded, setExpanded] = useState(false)
     const [newFolder, setNewFolder] = useState<string>('');
 
@@ -38,6 +39,8 @@ function AddFolderButton() {
             console.log(newFolder)
             setNewFolder('')
             setExpanded(false)
+            props.setItems([new stripeItem({ name: "brown-poker", link: "https://github.com/wilkyrlx/brown-poker", typeItem: stripeItemType.REPO, id: 1, children: [] }),
+        ])
         }
     }
 
@@ -119,12 +122,12 @@ function BackButton() {
     )
 }
 
-function ControlPanel() {
+function ControlPanel(props: {setItems: Dispatch<SetStateAction<stripeItem[]>>}) {
     return (
         <div className="control-panel">
             <LayoutGroup>
                 <BackButton />
-                <AddFolderButton />
+                <AddFolderButton setItems={props.setItems}/>
                 <AddManualRepoButton />
                 <SettingsButton />
             </LayoutGroup>
