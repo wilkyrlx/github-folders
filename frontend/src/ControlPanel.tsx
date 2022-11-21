@@ -27,7 +27,7 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
     );
 }
 
-
+// make edits to this one first
 function AddFolderButton() {
     const [expanded, setExpanded] = useState(false)
     const [newFolder, setNewFolder] = useState<string>('');
@@ -36,7 +36,8 @@ function AddFolderButton() {
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
             console.log(newFolder)
-            setNewFolder(newFolder)
+            setNewFolder('')
+            setExpanded(false)
         }
     }
 
@@ -45,7 +46,7 @@ function AddFolderButton() {
         <motion.div
             layout
             animate={expanded ? "open" : "closed"}
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => setExpanded(true)}
             className="add-folder-button expand-button"
             data-expanded={expanded}
             style={{
@@ -59,6 +60,7 @@ function AddFolderButton() {
 
 }
 
+// make edits to this one second
 function AddManualRepoButton() {
     const [expanded, setExpanded] = useState(false)
     const [newRepo, setNewRepo] = useState<string>('');
@@ -68,6 +70,7 @@ function AddManualRepoButton() {
         if (event.key === 'Enter') {
             console.log(newRepo)
             setNewRepo(newRepo)
+            setExpanded(false)
         }
     }
 
