@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { motion, AnimateSharedLayout, LayoutGroup } from "framer-motion"
+import { motion, LayoutGroup } from "framer-motion"
 import "./styles/ControlPanel.css"
 
 
@@ -22,7 +22,7 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
             value={value}
             onChange={(ev) => setValue(ev.target.value)}
             placeholder={placeholder}
-            onKeyDown={() => keyHandler}
+            onKeyDown={keyHandler}
         ></motion.input>
     );
 }
@@ -35,7 +35,8 @@ function AddFolderButton() {
 
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
-            console.log('do validate')
+            console.log(newFolder)
+            setNewFolder(newFolder)
         }
     }
 
@@ -53,7 +54,6 @@ function AddFolderButton() {
 
             {!expanded && <motion.img layout className="button-img" src="/icons/folder-plus.svg" />}
             {expanded && <ControlledInput value={newFolder} setValue={setNewFolder} placeholder={"Type a command"} keyHandler={handleKeyDown} />}
-
         </motion.div>
     )
 
@@ -61,6 +61,15 @@ function AddFolderButton() {
 
 function AddManualRepoButton() {
     const [expanded, setExpanded] = useState(false)
+    const [newRepo, setNewRepo] = useState<string>('');
+
+
+    const handleKeyDown = (event: any) => {
+        if (event.key === 'Enter') {
+            console.log(newRepo)
+            setNewRepo(newRepo)
+        }
+    }
 
     return (
         <motion.div
@@ -72,7 +81,9 @@ function AddManualRepoButton() {
                 borderRadius: BUTTON_BORDER_RADIUS
             }}>
 
-            <motion.img layout className="button-img" src="/icons/search.svg" />
+            {!expanded && <motion.img layout className="button-img" src="/icons/search.svg" /> }
+            {expanded && <ControlledInput value={newRepo} setValue={setNewRepo} placeholder={"Type a command"} keyHandler={handleKeyDown} />}
+
         </motion.div>
     )
 }
