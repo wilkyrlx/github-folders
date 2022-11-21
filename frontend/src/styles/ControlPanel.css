@@ -1,6 +1,9 @@
 .control-panel {
-    height: 150px;
+    height: 100px;
     background-color: rgba(166, 166, 164, 0.769);
+    display: flex;
+    justify-items: center;
+    align-items: center;
 }
 
 .expand-button {

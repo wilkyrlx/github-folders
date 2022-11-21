@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
 import "./styles/ControlPanel.css"
 import { stripeItem, stripeItemType } from "./components/StripeItem";
+import { StripeItemsProps } from "./App";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -29,7 +30,7 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
 }
 
 // make edits to this one first
-function AddFolderButton(props: {setItems: Dispatch<SetStateAction<stripeItem[]>>}) {
+function AddFolderButton({setItems, items}: StripeItemsProps) {
     const [expanded, setExpanded] = useState(false)
     const [newFolder, setNewFolder] = useState<string>('');
 
@@ -39,8 +40,10 @@ function AddFolderButton(props: {setItems: Dispatch<SetStateAction<stripeItem[]>
             console.log(newFolder)
             setNewFolder('')
             setExpanded(false)
-            props.setItems([new stripeItem({ name: "brown-poker", link: "https://github.com/wilkyrlx/brown-poker", typeItem: stripeItemType.REPO, id: 1, children: [] }),
-        ])
+            const newItems = items.slice();
+            newItems.push(new stripeItem({ name: newFolder, link: "#", typeItem: stripeItemType.DIRECTORY, id: -5, children: [] }));
+            setItems(newItems);
+        
         }
     }
 
@@ -64,7 +67,7 @@ function AddFolderButton(props: {setItems: Dispatch<SetStateAction<stripeItem[]>
 }
 
 // make edits to this one second
-function AddManualRepoButton() {
+function AddManualRepoButton({setItems, items}: StripeItemsProps) {
     const [expanded, setExpanded] = useState(false)
     const [newRepo, setNewRepo] = useState<string>('');
 
@@ -94,7 +97,7 @@ function AddManualRepoButton() {
     )
 }
 
-function SettingsButton() {
+function SettingsButton({setItems, items}: StripeItemsProps) {
     return (
         <motion.div
             layout
@@ -108,7 +111,7 @@ function SettingsButton() {
     )
 }
 
-function BackButton() {
+function BackButton({setItems, items}: StripeItemsProps) {
     return (
         <motion.div
             layout
@@ -122,14 +125,14 @@ function BackButton() {
     )
 }
 
-function ControlPanel(props: {setItems: Dispatch<SetStateAction<stripeItem[]>>}) {
+function ControlPanel({setItems, items}: StripeItemsProps) {
     return (
         <div className="control-panel">
             <LayoutGroup>
-                <BackButton />
-                <AddFolderButton setItems={props.setItems}/>
-                <AddManualRepoButton />
-                <SettingsButton />
+                <BackButton setItems={setItems} items={items}/>
+                <AddFolderButton setItems={setItems} items={items}/>
+                <AddManualRepoButton setItems={setItems} items={items}/>
+                <SettingsButton setItems={setItems} items={items}/>
             </LayoutGroup>
         </div>
     )
