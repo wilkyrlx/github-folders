@@ -10,13 +10,6 @@ This project is born out of frusturation with the limited UI for github, with di
 ## References
 *Note: not all are used in the final product*
 https://github.com/ghuser-io/github-contribs/blob/master/index.js <br>
-https://github.com/trananhtuat/react-draggable-list/tree/main/src/components
+https://github.com/trananhtuat/react-draggable-list/tree/main/src/components <br>
+https://heroicons.com/
 
-## Notes:
-https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user
-
-working cURL call:
-curl \
-  -H "Accept: application/vnd.github+json" \
-  -H "Authorization: Bearer <token>" \
-  https://api.github.com/user/repos

@@ -1,10 +1,10 @@
+import "../styles/ControlPanel.css"
+
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
-import "../styles/ControlPanel.css"
 import { stripeItem, stripeItemType } from "./StripeItem";
 import { StripeItemsProps } from "../App";
-import { Octokit } from "octokit";
-import { githubToken } from "../private/GithubKey";
+import { getAllRepos } from "../github-interface/GithubReader";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -99,19 +99,6 @@ function AddManualRepoButton({setItems, items}: StripeItemsProps) {
 }
 
 function SettingsButton({setItems, items}: StripeItemsProps) {
-    async function getAllRepos() {
-        const token = githubToken
-    
-        // Octokit.js
-        // https://github.com/octokit/core.js#readme
-        const octokit = new Octokit({
-            auth: token
-        })
-    
-        const response = await octokit.request('GET /user/repos{?visibility,affiliation,type,sort,direction,per_page,page,since,before}', {})
-        console.log(await response.data);
-    }
-    
     return (
         <motion.div
             layout
