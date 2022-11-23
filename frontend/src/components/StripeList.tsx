@@ -1,8 +1,7 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
 import { Reorder } from "framer-motion";
-import "./styles/StripeList.css"
-import { stripeItem, stripeItemType } from "./components/StripeItem";
-import { StripeItemsProps } from "./App";
+import "../styles/StripeList.css"
+import { stripeItem, stripeItemType } from "./StripeItem";
+import { StripeItemsProps } from "../App";
 
 
 

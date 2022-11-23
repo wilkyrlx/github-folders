@@ -1,8 +1,10 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
-import "./styles/ControlPanel.css"
-import { stripeItem, stripeItemType } from "./components/StripeItem";
-import { StripeItemsProps } from "./App";
+import "../styles/ControlPanel.css"
+import { stripeItem, stripeItemType } from "./StripeItem";
+import { StripeItemsProps } from "../App";
+import { Octokit } from "octokit";
+import { githubToken } from "../private/GithubKey";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -34,28 +36,13 @@ function AddFolderButton({setItems, items}: StripeItemsProps) {
     const [expanded, setExpanded] = useState(false)
     const [newFolder, setNewFolder] = useState<string>('');
 
-	const cyrb53 = (str:string, seed = 0) => {
-		let h1 = 0xdeadbeef ^ seed,
-		  h2 = 0x41c6ce57 ^ seed;
-		for (let i = 0, ch; i < str.length; i++) {
-		  ch = str.charCodeAt(i);
-		  h1 = Math.imul(h1 ^ ch, 2654435761);
-		  h2 = Math.imul(h2 ^ ch, 1597334677);
-		}
-		
-		h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-		h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-		
-		return 4294967296 * (2097151 & h2) + (h1 >>> 0);
-	};
-
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
             console.log(newFolder)
             setNewFolder('')
             setExpanded(false)
             const newItems = items.slice();
-            newItems.push(new stripeItem({ name: newFolder, link: "#", typeItem: stripeItemType.DIRECTORY, id: cyrb53(newFolder) , children: [] }));
+            newItems.push(new stripeItem({ name: newFolder, link: "#", typeItem: stripeItemType.DIRECTORY , children: [] }));
             setItems(newItems);
         
         }
@@ -112,10 +99,23 @@ function AddManualRepoButton({setItems, items}: StripeItemsProps) {
 }
 
 function SettingsButton({setItems, items}: StripeItemsProps) {
+    async function getAllRepos() {
+        const token = githubToken
+    
+        // Octokit.js
+        // https://github.com/octokit/core.js#readme
+        const octokit = new Octokit({
+            auth: token
+        })
+    
+        const response = await octokit.request('GET /user/repos{?visibility,affiliation,type,sort,direction,per_page,page,since,before}', {})
+        console.log(await response.data);
+    }
+    
     return (
         <motion.div
             layout
-            onClick={() => { }}
+            onClick={() => getAllRepos()}
             className="expand-button"
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS
