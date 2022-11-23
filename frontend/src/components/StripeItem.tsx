@@ -23,6 +23,7 @@ interface stripeItemProps {
     children: number[] 
 }
 
+// TODO: consider auto-hashing ID
 class stripeItem {
     public name: string;
     public link: string;
