@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
 import { stripeItem, stripeItemType } from "./StripeItem";
 import { StripeItemsProps } from "../App";
-import { getAllRepos } from "../github-interface/GithubReader";
+import { readGithub } from "../github-interface/GithubReader";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -102,7 +102,7 @@ function SettingsButton({setItems, items}: StripeItemsProps) {
     return (
         <motion.div
             layout
-            onClick={() => getAllRepos()}
+            onClick={() => readGithub({setItems, items})}
             className="expand-button"
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS
