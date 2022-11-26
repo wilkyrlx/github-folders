@@ -20,7 +20,7 @@ interface stripeItemProps {
     children: stripeItem[] 
 }
 
-// TODO: consider auto-hashing ID
+// TODO: need to determine if doubly linked list is necessary or not
 class stripeItem {
     public name: string;
     public link: string;

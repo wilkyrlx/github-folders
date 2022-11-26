@@ -63,9 +63,11 @@ async function mockAPIResponse(): Promise<Repo[]> {
  */
 async function addGithubRepos({setItems, items}: StripeItemsProps, repoListPromise:Promise<Repo[]>, personalName:string, makePersonalDirectory:boolean) {
     const repoList: Repo[] = await repoListPromise;
+    // map of owner name to list of stripeItems. Owner could be user (wilkyrlx), organization, class, etc.
     let ownerMap: Map<string, stripeItem[]> = new Map();
-
     const newItems = items.slice();
+
+    // for each repository, check the owner and add to hashmap. Repos with same owner get added to a list of stripeItems
     repoList.forEach((repo: Repo) => {
         if(ownerMap.has(repo.owner)) {
             const tempStripeItem: stripeItem = new stripeItem({ name: repo.name, link: repo.html_url, typeItem: stripeItemType.REPO , children: [] })
@@ -79,6 +81,8 @@ async function addGithubRepos({setItems, items}: StripeItemsProps, repoListPromi
         }
     });
 
+    // for each owner, create a new directory where the childer are the list of stripeItem repos
+    // do not create a directory for the personal repos
     ownerMap.forEach((ownerDirectory: stripeItem[], ownerName: string) => {
         if(ownerName === personalName && !makePersonalDirectory) {
             newItems.push.apply(newItems, ownerDirectory)

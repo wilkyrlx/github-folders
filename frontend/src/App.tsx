@@ -4,6 +4,11 @@ import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
 
 
+// TODO: this is a messy way of doing this - try to let react manage the state and remove all occurences of "globalThis.homeItems"
+declare global {
+	var homeItems: stripeItem[];
+}
+
 export interface StripeItemsProps {
 	setItems: Dispatch<SetStateAction<stripeItem[]>>,
 	items: stripeItem[],
@@ -21,11 +26,12 @@ function App() {
 		brownCCG,		
 		new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] }),
 	])
+
 	
 	return (
 		<div className="app">
 			<ControlPanel setItems={setItems} items={items}/>
-			<StripeList setItems={setItems} items={items}/>
+			<StripeList setItems={setItems} items={items} />
 		</div>
 	);
 }

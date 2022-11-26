@@ -6,11 +6,11 @@ import { StripeItemsProps } from "../App";
 
 
 function StripeList({setItems, items}: StripeItemsProps) {
-
 	// this is the most disgusting code ever written
 	function handleClick(item: stripeItem) {
 		const isDirectory = item.typeItem === stripeItemType.DIRECTORY
 		if (isDirectory) {
+			globalThis.homeItems = items;
 			setItems(item.children);
 		}
 	}
@@ -37,7 +37,7 @@ function StripeList({setItems, items}: StripeItemsProps) {
 							<img src={item.typeItem.path} className="stripe-img"></img>
 							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name}</a>
 							{/* TODO: peg this to the right side*/}
-							<img src="/icons/trash.svg" onClick={(event) => deleteItem(item)} className="stripe-img stripe-delete"></img>
+							<a href="#" onClick={(event) => deleteItem(item)}><img src="/icons/trash.svg" className="stripe-img stripe-delete"></img></a>
 						</div>
 					</Reorder.Item>
 				))}

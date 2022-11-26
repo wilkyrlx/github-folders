@@ -61,7 +61,7 @@ function AddFolderButton({setItems, items}: StripeItemsProps) {
             }}>
 
             {!expanded && <motion.img layout className="button-img" src="/icons/folder-plus.svg" />}
-            {expanded && <ControlledInput value={newFolder} setValue={setNewFolder} placeholder={"Type a command"} keyHandler={handleKeyDown} />}
+            {expanded && <ControlledInput value={newFolder} setValue={setNewFolder} placeholder={"Add New Folder (Beta)"} keyHandler={handleKeyDown} />}
         </motion.div>
     )
 
@@ -92,7 +92,7 @@ function AddManualRepoButton({setItems, items}: StripeItemsProps) {
             }}>
 
             {!expanded && <motion.img layout className="button-img" src="/icons/search.svg" /> }
-            {expanded && <ControlledInput value={newRepo} setValue={setNewRepo} placeholder={"Type a command"} keyHandler={handleKeyDown} />}
+            {expanded && <ControlledInput value={newRepo} setValue={setNewRepo} placeholder={"Paste Repository Link"} keyHandler={handleKeyDown} />}
 
         </motion.div>
     )
@@ -116,12 +116,13 @@ function BackButton({setItems, items}: StripeItemsProps) {
     return (
         <motion.div
             layout
-            onClick={() => { }}
+            onClick={() => { setItems(globalThis.homeItems) }}
             className="expand-button"
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS
             }}>
-            <motion.img layout className="button-img" src="/icons/back-arrow.svg" />
+            {/* used to be back-arrow.svg */}
+            <motion.img layout className="button-img" src="/icons/home.svg" />
         </motion.div>
     )
 }
