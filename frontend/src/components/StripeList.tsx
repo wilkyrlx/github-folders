@@ -20,6 +20,15 @@ function StripeList({setItems, items}: StripeItemsProps) {
 		}
 	}
 
+	function deleteItem(item: stripeItem) {
+		let newItems = items.slice();
+		const index = newItems.indexOf(item)
+		if (index > -1) { // only splice array when item is found
+			newItems.splice(index, 1);
+		}
+		setItems(newItems);
+	}
+
 	// Actual list of items
 	return (
 		<div>
@@ -33,7 +42,7 @@ function StripeList({setItems, items}: StripeItemsProps) {
 							<img src={item.typeItem.path} className="stripe-img"></img>
 							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name}</a>
 							{/* TODO: peg this to the right side*/}
-							<img src="/icons/trash.svg" className="stripe-img stripe-delete"></img>
+							<img src="/icons/trash.svg" onClick={(event) => deleteItem(item)} className="stripe-img stripe-delete"></img>
 						</div>
 					</Reorder.Item>
 				))}

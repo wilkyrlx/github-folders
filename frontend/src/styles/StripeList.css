@@ -26,7 +26,13 @@ a, a:visited{
 }
 
 .stripe-delete {
+  /* TODO - make visible again */
+  width: 25px !important;
   visibility: hidden;  
+}
+
+.stripe-delete:hover {
+  filter: invert(15%) sepia(88%) saturate(4329%) hue-rotate(356deg) brightness(113%) contrast(129%);
 }
 
 
