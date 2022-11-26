@@ -10,11 +10,16 @@ export interface StripeItemsProps {
 }
 
 function App() {
+	// for testing only
+	const esgaroth = new stripeItem({ name: "esgaroth", link: "https://github.com/wilkyrlx/esgaroth", typeItem: stripeItemType.REPO, children: [] })
+	const brownPoker = new stripeItem({ name: "brown-poker", link: "https://github.com/wilkyrlx/brown-poker", typeItem: stripeItemType.REPO, children: [] })
+	const brownCCG = new stripeItem({ name: "brown-ccg/ccg-website", link: "https://github.com/brown-ccg/ccg-website", typeItem: stripeItemType.REPO, children: [] })
+	
 	const [items, setItems] = useState<stripeItem[]>([
-		new stripeItem({ name: "brown-poker", link: "https://github.com/wilkyrlx/brown-poker", typeItem: stripeItemType.REPO, children: [] }),
-		new stripeItem({ name: "brown-ccg/ccg-website", link: "https://github.com/brown-ccg/ccg-website", typeItem: stripeItemType.REPO, children: [] }),
-		new stripeItem({ name: "esgaroth", link: "https://github.com/wilkyrlx/esgaroth", typeItem: stripeItemType.REPO, children: [] }),
-		new stripeItem({ name: "esgaroth-folder", link: "#", typeItem: stripeItemType.DIRECTORY, children: [3, 1] }),
+		esgaroth,
+		brownPoker,
+		brownCCG,		
+		new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] }),
 	])
 	
 	return (

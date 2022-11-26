@@ -9,14 +9,9 @@ function StripeList({setItems, items}: StripeItemsProps) {
 
 	// this is the most disgusting code ever written
 	function handleClick(item: stripeItem) {
-		const isDirectory = item.typeItem == stripeItemType.DIRECTORY
+		const isDirectory = item.typeItem === stripeItemType.DIRECTORY
 		if (isDirectory) {
-			let childItems = items.slice();
-			const allFiltered: any[] = [];
-			item.children.forEach((targetID: number) => {
-				allFiltered.push(childItems.find(x => x.id === targetID));
-			})
-			setItems(allFiltered);
+			setItems(item.children);
 		}
 	}
 

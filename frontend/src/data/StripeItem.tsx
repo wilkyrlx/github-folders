@@ -17,7 +17,7 @@ interface stripeItemProps {
     name: string;
     link: string;
     typeItem:stripeItemType;
-    children: number[] 
+    children: stripeItem[] 
 }
 
 // TODO: consider auto-hashing ID
@@ -26,7 +26,7 @@ class stripeItem {
     public link: string;
     public typeItem:stripeItemType;
     public id: number;
-    public children: number[] 
+    public children: stripeItem[] 
     constructor(item:stripeItemProps){
         this.id = cyrb53(item.name);
         this.name = item.name;
