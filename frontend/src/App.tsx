@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { stripeItem, stripeItemType } from "./components/StripeItem";
+import { stripeItem, stripeItemType } from "./data/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
 

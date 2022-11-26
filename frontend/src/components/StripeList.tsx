@@ -1,6 +1,6 @@
 import { Reorder } from "framer-motion";
 import "../styles/StripeList.css"
-import { stripeItem, stripeItemType } from "./StripeItem";
+import { stripeItem, stripeItemType } from "../data/StripeItem";
 import { StripeItemsProps } from "../App";
 
 
@@ -27,9 +27,13 @@ function StripeList({setItems, items}: StripeItemsProps) {
 				onReorder={setItems}>
 				{items.map((item) => (
 					<Reorder.Item key={item.id} value={item} >
+						{/* This is where the UI of each stripe item is generated. Might make sense to do this
+						    in a new component someday, but framer-motion does not like lists of react components */}
 						<div className="stripe-item">
 							<img src={item.typeItem.path} className="stripe-img"></img>
 							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name}</a>
+							{/* TODO: peg this to the right side*/}
+							<img src="/icons/trash.svg" className="stripe-img stripe-delete"></img>
 						</div>
 					</Reorder.Item>
 				))}

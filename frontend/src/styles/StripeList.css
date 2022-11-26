@@ -6,7 +6,6 @@ li {
   padding:10px 50px 10px 10px;
   font-weight: bold;
   background:rgb(255, 255, 255);
-
   display: flex;
 }
 
@@ -24,6 +23,10 @@ a, a:visited{
   height: auto;
   width: 30px;
   margin-right: 5px;
+}
+
+.stripe-delete {
+  visibility: hidden;  
 }
 
 

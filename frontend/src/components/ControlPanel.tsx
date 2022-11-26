@@ -2,7 +2,7 @@ import "../styles/ControlPanel.css"
 
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
-import { stripeItem, stripeItemType } from "./StripeItem";
+import { stripeItem, stripeItemType } from "../data/StripeItem";
 import { StripeItemsProps } from "../App";
 import { readGithub } from "../github-interface/GithubReader";
 
