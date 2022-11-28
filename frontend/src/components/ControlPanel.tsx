@@ -66,11 +66,12 @@ function AddFolderButton({setItems, items}: StripeItemsProps) {
 }
 
 function AddManualRepoButton({setItems, items}: StripeItemsProps) {
-    const [expanded, setExpanded] = useState(false)
+    // TODO: set other types to boolean
+    const [expanded, setExpanded] = useState<boolean>(false)
     const [newRepo, setNewRepo] = useState<string>('');
 
 
-    // TODO: fix issue where user can submit a repo name that already exists
+    // TODO: fix issue where user can submit a repo name that already exists. Maybe random directory? random/dummy
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
             console.log(newRepo)

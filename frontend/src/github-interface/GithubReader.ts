@@ -42,6 +42,8 @@ async function githubAPIResponse(): Promise<Repo[]> {
  * repos where user is a contributor but not a collaborator. Those repos are handled 
  * in other functions.
  * 
+ * IMPORTANT: will only collect the first 100 repos found on 1 page
+ * 
  * @returns a list of all general Repo with certain fields from JSON output
  */
 async function getGeneralReposAPIResponse(): Promise<Repo[]> {
@@ -62,14 +64,17 @@ async function getGeneralReposAPIResponse(): Promise<Repo[]> {
  * Note: this may be too much data for some users - if some users are on teams with huge
  * numbers of repos. Consider altering in some way/adding the chance to opt out 
  * 
+ * IMPORTANT: will only collect the first 100 repos found on 1 page
+ * 
  * @returns a list of all team Repo with certain fields from JSON output
  */
 async function getTeamReposAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
     // refer to https://docs.github.com/en/rest/teams/teams#list-teams-for-the-authenticated-user for documentation
-    const teamData = (await octokit.request('GET /user/teams', {})).data;
+    const teamData = (await octokit.request('GET /user/teams?page=1&per_page=100', {})).data;
     for(const team of teamData) {
+        // TODO: this only gets 30? repos. May have to add a per_page param to request
         // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
         const teamRepoData = (await octokit.request(team.repositories_url, {})).data;
         teamRepoData.forEach((repo: any) => {
@@ -131,6 +136,5 @@ async function mockAPIResponse(): Promise<Repo[]> {
 
     return repoListFull;
 }
-
 
 export { readGithub }

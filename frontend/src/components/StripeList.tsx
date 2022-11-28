@@ -30,7 +30,7 @@ function StripeList({setItems, items}: StripeItemsProps) {
 	 */
 	function displayName(rawName: string): string {
 		const parsedName: string[] = rawName.split('/'); 
-		return parsedName[parsedName.length - 1]
+		return parsedName[parsedName.length - 1];
 	}
 
 	// Actual list of items
