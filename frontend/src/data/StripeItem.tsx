@@ -22,20 +22,21 @@ interface stripeItemProps {
 
 // TODO: need to determine if doubly linked list is necessary or not
 class stripeItem {
-    public name: string;
-    public link: string;
-    public typeItem:stripeItemType;
-    public id: number;
-    public children: stripeItem[] 
+    public name: string;    // name (visible to user)
+    public link: string;    // link to github repo (or # for directory)
+    public typeItem:stripeItemType; //REPO or DIRECTORY
+    public id: number;  // ID, critical for framer-motion list order
+    public children: stripeItem[];  // list of stripeItems in directory (directory only, NOT for repo)
     constructor(item:stripeItemProps){
-        this.id = cyrb53(item.name);
         this.name = item.name;
         this.link = item.link;
+        this.id = cyrb53(item.name);
         this.typeItem = item.typeItem;
         this.children = item.children;
     }
 }
 
+// hashing function, credits to bryc. Used for generating a unique numeric ID (critical for framer-motion list)
 const cyrb53 = (str:string, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
       h2 = 0x41c6ce57 ^ seed;

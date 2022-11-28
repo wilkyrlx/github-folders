@@ -94,14 +94,16 @@ async function addGithubRepos({ setItems, items }: StripeItemsProps, repoListPro
 
     // for each repository, check the owner and add to hashmap. Repos with same owner get added to a list of stripeItems
     repoList.forEach((repo: Repo) => {
+        // name is owner/name, i.e. wilkyrlx/dummy. This prevents naming conflicts, i.e. wilkyrlx/dummy and cmoran5/dummy
+        const fullName: string = `${repo.owner}/${repo.name}`;
         if (ownerMap.has(repo.owner)) {
-            const tempStripeItem: stripeItem = new stripeItem({ name: repo.name, link: repo.html_url, typeItem: stripeItemType.REPO, children: [] })
+            const tempStripeItem: stripeItem = new stripeItem({ name: fullName, link: repo.html_url, typeItem: stripeItemType.REPO, children: [] })
             // TODO: get rid of this typecasting
             const tempItemList: stripeItem[] = ownerMap.get(repo.owner) as stripeItem[]
             tempItemList.push(tempStripeItem)
             ownerMap.set(repo.owner, tempItemList)
         } else {
-            const tempStripeItem: stripeItem = new stripeItem({ name: repo.name, link: repo.html_url, typeItem: stripeItemType.REPO, children: [] })
+            const tempStripeItem: stripeItem = new stripeItem({ name: fullName, link: repo.html_url, typeItem: stripeItemType.REPO, children: [] })
             ownerMap.set(repo.owner, [tempStripeItem])
         }
     });

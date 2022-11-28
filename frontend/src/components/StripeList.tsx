@@ -35,7 +35,8 @@ function StripeList({setItems, items}: StripeItemsProps) {
 						    in a new component someday, but framer-motion does not like lists of react components */}
 						<div className="stripe-item">
 							<img src={item.typeItem.path} className="stripe-img"></img>
-							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name}</a>
+							{/* splits on item.name to remove the directory. This could be toggled in the future? */}
+							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name.split('/')[1]}</a>
 							{/* TODO: peg this to the right side*/}
 							<a href="#" onClick={(event) => deleteItem(item)}><img src="/icons/trash.svg" className="stripe-img stripe-delete"></img></a>
 						</div>
