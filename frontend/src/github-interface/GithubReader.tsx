@@ -29,8 +29,12 @@ async function githubAPIResponse(): Promise<Repo[]> {
     const token = githubToken;
 
     // TODO: does this get private repos? may have to authenticate first
+    /* TODO: does not find repos where you are a contributor but NOT collaborator. Consider using teams?
+    https://docs.github.com/en/rest/teams/teams#list-teams-for-the-authenticated-user
+    https://docs.github.com/en/rest/teams/teams#list-team-repositories
+    */
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation
-    const rawData = await fetch(`https://api.github.com/user/repos?affiliation=owner,collaborator&page=1&per_page=50`,{
+    const rawData = await fetch(`https://api.github.com/user/repos?affiliation=owner,collaborator&page=1&per_page=100`,{
         method: "GET",
         headers: {
           Authorization: `token ` + token 
