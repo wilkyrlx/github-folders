@@ -24,6 +24,15 @@ function StripeList({setItems, items}: StripeItemsProps) {
 		setItems(newItems);
 	}
 
+	/** Gets a display name from a complex name
+	 * @param rawName - a name, could be example/dummy or just dummy or even example/path/dummy
+	 * @returns - a display name, for all above examples would be dummy
+	 */
+	function displayName(rawName: string): string {
+		const parsedName: string[] = rawName.split('/'); 
+		return parsedName[parsedName.length - 1]
+	}
+
 	// Actual list of items
 	return (
 		<div>
@@ -35,8 +44,8 @@ function StripeList({setItems, items}: StripeItemsProps) {
 						    in a new component someday, but framer-motion does not like lists of react components */}
 						<div className="stripe-item">
 							<img src={item.typeItem.path} className="stripe-img"></img>
-							{/* splits on item.name to remove the directory. This could be toggled in the future? */}
-							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{item.name.split('/')[1]}</a>
+							{/* splits via regex on item.name to remove the directory. This could be toggled in the future? */}
+							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{displayName(item.name)}</a>
 							{/* TODO: peg this to the right side*/}
 							<a href="#" onClick={(event) => deleteItem(item)}><img src="/icons/trash.svg" className="stripe-img stripe-delete"></img></a>
 						</div>

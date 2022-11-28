@@ -31,7 +31,6 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
     );
 }
 
-// make edits to this one first
 function AddFolderButton({setItems, items}: StripeItemsProps) {
     const [expanded, setExpanded] = useState(false)
     const [newFolder, setNewFolder] = useState<string>('');
@@ -44,7 +43,6 @@ function AddFolderButton({setItems, items}: StripeItemsProps) {
             const newItems = items.slice();
             newItems.push(new stripeItem({ name: newFolder, link: "#", typeItem: stripeItemType.DIRECTORY , children: [] }));
             setItems(newItems);
-        
         }
     }
 
@@ -67,17 +65,20 @@ function AddFolderButton({setItems, items}: StripeItemsProps) {
 
 }
 
-// make edits to this one second
 function AddManualRepoButton({setItems, items}: StripeItemsProps) {
     const [expanded, setExpanded] = useState(false)
     const [newRepo, setNewRepo] = useState<string>('');
 
 
+    // TODO: fix issue where user can submit a repo name that already exists
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
             console.log(newRepo)
-            setNewRepo(newRepo)
+            setNewRepo('')
             setExpanded(false)
+            const newItems = items.slice();
+            newItems.push(new stripeItem({ name: newRepo, link: "#", typeItem: stripeItemType.REPO , children: [] }));
+            setItems(newItems);
         }
     }
 
