@@ -28,7 +28,9 @@ async function githubAPIResponse(): Promise<Repo[]> {
     // TODO: make authentication oauth, not hardcoded key
     const token = githubToken;
 
-    const rawData = await fetch(`https://api.github.com/user/repos`,{
+    // TODO: does this get private repos? may have to authenticate first
+    // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation
+    const rawData = await fetch(`https://api.github.com/user/repos?affiliation=owner,collaborator&page=1&per_page=50`,{
         method: "GET",
         headers: {
           Authorization: `token ` + token 
@@ -37,6 +39,7 @@ async function githubAPIResponse(): Promise<Repo[]> {
     
     // TODO: add better error catching here
     const jsonData = await rawData.json();
+    console.log(jsonData)
     const repoListFull: Repo[] = [];
     jsonData.forEach((repo: any) => {
         repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, repo.owner.login));
