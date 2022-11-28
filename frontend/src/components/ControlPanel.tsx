@@ -5,11 +5,10 @@ import { motion, LayoutGroup } from "framer-motion"
 import { stripeItem, stripeItemType } from "../data/StripeItem";
 import { StripeItemsProps } from "../App";
 import { readGithub } from "../github-interface/GithubReader";
+import { beginOAuth } from "../github-interface/GithubAuth";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
-
-
 
 interface ControlledInputProps {
     value: string,
