@@ -18,9 +18,11 @@ Run `npm run build`. Next, navigate to [chrome extensions](chrome://extensions/)
 Coming soon! :)
 
 ## References and Credits
-[Icons - heroicons](https://heroicons.com/) <br>
+[Icons - heroicons](https://heroicons.com/) 
+<br>
 [cyrb53 hash - bryc](https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js)
 
 ## Useful links
-oauth with github - http://thecodebarbarian.com/github-oauth-login-with-node-js.html
+oauth with github - http://thecodebarbarian.com/github-oauth-login-with-node-js.html 
+<br>
 react chrome extension - https://medium.com/litslink/how-to-create-google-chrome-extension-using-react-js-5c9e343323ff

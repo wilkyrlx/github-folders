@@ -4,8 +4,9 @@ import { Repo } from "../data/repo"
 import { githubToken } from "../private/GithubKey"
 import { Octokit } from "octokit"
 
-
+// authorization for API calls
 const octokit = new Octokit({
+    //TODO: use oauth
     auth: githubToken
 })
 
@@ -30,8 +31,8 @@ async function githubAPIResponse(): Promise<Repo[]> {
     const generalRepos: Repo[] = await getGeneralReposAPIResponse();
     const teamRepos: Repo[] = await getTeamReposAPIResponse();
 
-    // append lists together
-    return [...generalRepos, ...teamRepos];
+    // concat lists together
+    return generalRepos.concat(teamRepos);
 }
 
 /**
@@ -46,7 +47,6 @@ async function githubAPIResponse(): Promise<Repo[]> {
 async function getGeneralReposAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
-    // TODO: does this get private repos? may have to authenticate first
     // TODO: add better error catching here
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
     const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;
@@ -76,16 +76,6 @@ async function getTeamReposAPIResponse(): Promise<Repo[]> {
             repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, repo.owner.login));
         });
     };
-    return repoListFull;
-}
-
-async function mockAPIResponse(): Promise<Repo[]> {
-    const repoListFull: Repo[] = [];
-
-    repoListFull.push(new Repo("ccg", "brown-ccg/ccg", "https://github.com/brown-ccg/ccg-website", "brown-ccg"));
-    repoListFull.push(new Repo("ccg-tools", "brown-ccg/ccg-tools", "https://github.com/brown-ccg", "brown-ccg"));
-    repoListFull.push(new Repo("esgaroth2", "wilkyrlx/esgaroth", "https://github.com/wilkyrlx/esgaroth", "wilkyrlx"));
-
     return repoListFull;
 }
 
@@ -127,6 +117,17 @@ async function addGithubRepos({ setItems, items }: StripeItemsProps, repoListPro
     })
 
     setItems(newItems);
+}
+
+// mocks an API call, use in place of githubAPIResponse
+async function mockAPIResponse(): Promise<Repo[]> {
+    const repoListFull: Repo[] = [];
+
+    repoListFull.push(new Repo("ccg", "brown-ccg/ccg", "https://github.com/brown-ccg/ccg-website", "brown-ccg"));
+    repoListFull.push(new Repo("ccg-tools", "brown-ccg/ccg-tools", "https://github.com/brown-ccg", "brown-ccg"));
+    repoListFull.push(new Repo("esgaroth2", "wilkyrlx/esgaroth", "https://github.com/wilkyrlx/esgaroth", "wilkyrlx"));
+
+    return repoListFull;
 }
 
 
