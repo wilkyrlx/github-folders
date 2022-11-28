@@ -11,7 +11,7 @@ import { githubToken } from "../private/GithubKey"
  */
 async function readGithub({setItems, items}: StripeItemsProps) {
     // second param can be mockAPIRepsonse() or githubAPIResponse(). Latter for deployment
-    addGithubRepos({setItems, items}, mockAPIResponse(), "wilkyrlx", false);
+    addGithubRepos({setItems, items}, githubAPIResponse(), "wilkyrlx", false);
 }
 
 /**
@@ -39,7 +39,7 @@ async function githubAPIResponse(): Promise<Repo[]> {
     const jsonData = await rawData.json();
     const repoListFull: Repo[] = [];
     jsonData.forEach((repo: any) => {
-        repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, "FIXME"));
+        repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, repo.owner.login));
     });
     return repoListFull;
 }
