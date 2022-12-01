@@ -18,7 +18,7 @@ const octokit = new Octokit({
  */
 async function readGithub({ setItems, items }: StripeItemsProps) {
     // second param can be mockAPIRepsonse() or githubAPIResponse(). Latter for deployment
-    addGithubRepos({ setItems, items }, mockAPIResponse(), "wilkyrlx", false);
+    addGithubRepos({ setItems, items }, githubAPIResponse(), "wilkyrlx", false);
 }
 
 /**

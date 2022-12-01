@@ -6,11 +6,11 @@
 // TODO: check how chrome extensions work, repo may not have to open in new tab
 
 class stripeItemType {
-    static readonly REPO = new stripeItemType("/icons/command-line.svg", "_blank")
-    static readonly DIRECTORY = new stripeItemType("/icons/folder.svg", "_self")
+    static readonly REPO = new stripeItemType(1, "/icons/command-line.svg", "_blank")
+    static readonly DIRECTORY = new stripeItemType(2, "/icons/folder.svg", "_self")
 
     // private to disallow creating other instances of this type
-    private constructor(public readonly path: string, public readonly target: any) {
+    private constructor(public readonly id: number, public readonly path: string, public readonly target: any) {
     }
 }
 

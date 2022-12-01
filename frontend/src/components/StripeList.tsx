@@ -8,10 +8,12 @@ import { StripeItemsProps } from "../App";
 function StripeList({ setItems, items }: StripeItemsProps) {
 	// this is the most disgusting code ever written
 	function handleClick(item: stripeItem) {
+		console.log(item.typeItem as stripeItemType)
 		const isDirectory = item.typeItem === stripeItemType.DIRECTORY
 		if (isDirectory) {
 			globalThis.homeItems = items;
 			setItems(item.children);
+			console.log(item.children)
 		}
 	}
 

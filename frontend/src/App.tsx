@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { stripeItem, stripeItemType } from "./data/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
+import { TypedJSON } from "typedjson";
 
 
 // TODO: this is a messy way of doing this - try to let react manage the state and remove all occurences of "globalThis.homeItems"
@@ -14,11 +15,15 @@ export interface StripeItemsProps {
 	items: stripeItem[],
 }
 
+
+
+// https://stackoverflow.com/questions/34951170/save-json-to-chrome-storage-local-storage
 var local = (function () {
 
 	var setData = function (key: string, obj: any) {
 		var values = JSON.stringify(obj);
 		localStorage.setItem(key, values);
+	
 	}
 
 	var getData = function (key: string) {
@@ -29,31 +34,9 @@ var local = (function () {
 		}
 	}
 
-	var updateDate = function (key: string, newData: { [x: string]: any; }) {
-		if (localStorage.getItem(key) != null) {
-			var oldData = JSON.parse(localStorage.getItem(key) as string);
-			for (const keyObj in newData) {
-				oldData[keyObj] = newData[keyObj];
-			}
-			var values = JSON.stringify(oldData);
-			localStorage.setItem(key, values);
-		} else {
-			return false;
-		}
-	}
-
-	return { set: setData, get: getData, update: updateDate }
+	return { set: setData, get: getData }
 })();
 
-function setTest() {
-	var a = { 'test': 113 };
-	local.set('valueA', a);
-}
-
-function loadTest() {
-	var a = local.get('valueA')
-	console.log(a)
-}
 
 function App() {
 	// for testing only
@@ -63,11 +46,28 @@ function App() {
 	const testFolder = new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] })
 	const [items, setItems] = useState<stripeItem[]>([])
 
+	function saveAllData() {
+		var toSave = { data: items };
+		local.set('repoDataKey', toSave);
+	}
+
+	function loadAllData() {
+		var toLoad = local.get('repoDataKey')
+		let newItems = items.slice();
+		toLoad.data.forEach((element: stripeItem) => {
+			const constructedStripeItemType: stripeItemType = element.typeItem.id == 1? stripeItemType.REPO : stripeItemType.DIRECTORY;
+			const constructedStripeItem: stripeItem = new stripeItem({name: element.name, link: element.link, typeItem: constructedStripeItemType, children:element.children})
+			newItems.push(constructedStripeItem)
+			console.log(constructedStripeItem)
+		});
+		setItems(newItems);
+	}
+
 
 	return (
 		<div className="app">
-			<button onClick={() => setTest()}>save data</button>
-			<button onClick={() => loadTest()}>load data</button>
+			<button onClick={() => saveAllData()}>save data</button>
+			<button onClick={() => loadAllData()}>load data</button>
 			<ControlPanel setItems={setItems} items={items} />
 			<StripeList setItems={setItems} items={items} />
 		</div>
