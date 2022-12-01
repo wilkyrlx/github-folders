@@ -1,5 +1,6 @@
 /**
 * This class functions as an enum with fields:
+* id - 1 for repo, 2 for directory. This is crucial for JSON parsing. Int so it can be extended
 * path - path to the image icon
 * target - repo opens in new tab, directory executes on page
 */

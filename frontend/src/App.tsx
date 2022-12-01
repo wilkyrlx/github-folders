@@ -16,7 +16,7 @@ export interface StripeItemsProps {
 }
 
 
-
+//TODO: documentation
 // https://stackoverflow.com/questions/34951170/save-json-to-chrome-storage-local-storage
 var local = (function () {
 
@@ -46,16 +46,19 @@ function App() {
 	const testFolder = new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] })
 	const [items, setItems] = useState<stripeItem[]>([])
 
+	//TODO: documentation
 	function saveAllData() {
 		var toSave = { data: items };
 		local.set('repoDataKey', toSave);
 	}
 
+	//TODO: documentation
 	function loadAllData() {
 		var toLoad = local.get('repoDataKey')
 		let newItems = items.slice();
 		toLoad.data.forEach((element: stripeItem) => {
-			const constructedStripeItemType: stripeItemType = element.typeItem.id == 1? stripeItemType.REPO : stripeItemType.DIRECTORY;
+			// note: ternary operator relies on only two types. If there are more, use a switch case
+			const constructedStripeItemType: stripeItemType = element.typeItem.id == 1 ? stripeItemType.REPO : stripeItemType.DIRECTORY;
 			const constructedStripeItem: stripeItem = new stripeItem({name: element.name, link: element.link, typeItem: constructedStripeItemType, children:element.children})
 			newItems.push(constructedStripeItem)
 			console.log(constructedStripeItem)
