@@ -2,8 +2,9 @@
 * This class functions as an enum with fields:
 * path - path to the image icon
 * target - repo opens in new tab, directory executes on page
-* TODO: check how chrome extensions work, repo may not have to open in new tab
 */
+// TODO: check how chrome extensions work, repo may not have to open in new tab
+
 class stripeItemType {
     static readonly REPO = new stripeItemType("/icons/command-line.svg", "_blank")
     static readonly DIRECTORY = new stripeItemType("/icons/folder.svg", "_self")

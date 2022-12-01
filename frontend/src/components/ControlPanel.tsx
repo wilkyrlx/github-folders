@@ -5,7 +5,6 @@ import { motion, LayoutGroup } from "framer-motion"
 import { stripeItem, stripeItemType } from "../data/StripeItem";
 import { StripeItemsProps } from "../App";
 import { readGithub } from "../github-interface/GithubReader";
-import { beginOAuth } from "../github-interface/GithubAuth";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -138,12 +137,20 @@ function SettingsButton({ setItems, items }: StripeItemsProps) {
     )
 }
 
-// FIXME: not working right now
+// TODO: really ugly
 function BackButton({ setItems, items }: StripeItemsProps) {
+
+    function determineHomeItems(): stripeItem[] {
+        if (globalThis.homeItems.length  > 0) {
+            return globalThis.homeItems;
+        }
+        return [];
+    }
+
     return (
         <motion.div
             layout
-            onClick={() => { setItems(globalThis.homeItems) }}
+            onClick={() => { setItems(determineHomeItems()) }}
             className="expand-button"
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS

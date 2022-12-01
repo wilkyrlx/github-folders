@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { stripeItem, stripeItemType } from "./data/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
@@ -14,6 +14,47 @@ export interface StripeItemsProps {
 	items: stripeItem[],
 }
 
+var local = (function () {
+
+	var setData = function (key: string, obj: any) {
+		var values = JSON.stringify(obj);
+		localStorage.setItem(key, values);
+	}
+
+	var getData = function (key: string) {
+		if (localStorage.getItem(key) != null) {
+			return JSON.parse(localStorage.getItem(key) as string);
+		} else {
+			return false;
+		}
+	}
+
+	var updateDate = function (key: string, newData: { [x: string]: any; }) {
+		if (localStorage.getItem(key) != null) {
+			var oldData = JSON.parse(localStorage.getItem(key) as string);
+			for (const keyObj in newData) {
+				oldData[keyObj] = newData[keyObj];
+			}
+			var values = JSON.stringify(oldData);
+			localStorage.setItem(key, values);
+		} else {
+			return false;
+		}
+	}
+
+	return { set: setData, get: getData, update: updateDate }
+})();
+
+function setTest() {
+	var a = { 'test': 113 };
+	local.set('valueA', a);
+}
+
+function loadTest() {
+	var a = local.get('valueA')
+	console.log(a)
+}
+
 function App() {
 	// for testing only
 	const esgaroth = new stripeItem({ name: "esgaroth", link: "https://github.com/wilkyrlx/esgaroth", typeItem: stripeItemType.REPO, children: [] })
@@ -22,10 +63,12 @@ function App() {
 	const testFolder = new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] })
 	const [items, setItems] = useState<stripeItem[]>([])
 
-	
+
 	return (
 		<div className="app">
-			<ControlPanel setItems={setItems} items={items}/>
+			<button onClick={() => setTest()}>save data</button>
+			<button onClick={() => loadTest()}>load data</button>
+			<ControlPanel setItems={setItems} items={items} />
 			<StripeList setItems={setItems} items={items} />
 		</div>
 	);

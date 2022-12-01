@@ -29,9 +29,6 @@ a, a:visited{
 }
 
 .stripe-delete {
-  /* TODO - make visible again. Keep here and copy+paste
-    visibility: hidden;  
-  */
   width: 25px !important;
   margin-right: 0px !important;
   opacity: 0.2;
