@@ -7,17 +7,20 @@ li {
   font-weight: bold;
   background:rgb(255, 255, 255);
   display: flex;
+  justify-content:space-between;
 }
 
 a, a:visited{
+  display: flex;
   color: #0E6CDB;
 }
 
 .stripe-item {
   display: flex;
-  justify-items: center;
   align-items: center;
+  justify-content:right;
 }
+
 
 .stripe-img {
   height: auto;
@@ -26,13 +29,17 @@ a, a:visited{
 }
 
 .stripe-delete {
-  /* TODO - make visible again */
+  /* TODO - make visible again. Keep here and copy+paste
+    visibility: hidden;  
+  */
   width: 25px !important;
-  visibility: hidden;  
+  margin-right: 0px !important;
+  opacity: 0.2;
 }
 
 .stripe-delete:hover {
   filter: invert(15%) sepia(88%) saturate(4329%) hue-rotate(356deg) brightness(113%) contrast(129%);
+  opacity: 1;
 }
 
 

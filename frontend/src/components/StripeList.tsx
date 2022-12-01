@@ -5,7 +5,7 @@ import { StripeItemsProps } from "../App";
 
 
 
-function StripeList({setItems, items}: StripeItemsProps) {
+function StripeList({ setItems, items }: StripeItemsProps) {
 	// this is the most disgusting code ever written
 	function handleClick(item: stripeItem) {
 		const isDirectory = item.typeItem === stripeItemType.DIRECTORY
@@ -29,7 +29,7 @@ function StripeList({setItems, items}: StripeItemsProps) {
 	 * @returns - a display name, for all above examples would be dummy
 	 */
 	function displayName(rawName: string): string {
-		const parsedName: string[] = rawName.split('/'); 
+		const parsedName: string[] = rawName.split('/');
 		return parsedName[parsedName.length - 1];
 	}
 
@@ -47,8 +47,9 @@ function StripeList({setItems, items}: StripeItemsProps) {
 							{/* splits via regex on item.name to remove the directory. This could be toggled in the future? */}
 							<a href={item.link} onClick={(event) => handleClick(item)} target={item.typeItem.target}>{displayName(item.name)}</a>
 							{/* TODO: peg this to the right side*/}
-							<a href="#" onClick={(event) => deleteItem(item)}><img src="/icons/trash.svg" className="stripe-img stripe-delete"></img></a>
 						</div>
+						<a href="#" onClick={(event) => deleteItem(item)}><img src="/icons/trash.svg" className="stripe-img stripe-delete"></img></a>
+						
 					</Reorder.Item>
 				))}
 			</Reorder.Group>

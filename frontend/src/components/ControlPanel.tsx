@@ -26,16 +26,8 @@ interface ExpandingButtonProps {
 
 function ControlledInput({ value, setValue, placeholder, keyHandler }: ControlledInputProps) {
     const inputVar = {
-        hidden: {
-            opacity: 0, transition: {
-                delay: 0.2
-            }
-        },
-        show: {
-            opacity: 1, transition: {
-                delay: 0.2
-            }
-        }
+        hidden: { opacity: 0 },
+        show: { opacity: 1, transition: { delay: 0.2 } }
     };
 
     return (
@@ -90,6 +82,20 @@ function AddFolderButton({ setItems, items, setExpanded, expanded }: ExpandingBu
 function AddManualRepoButton({ setItems, items, setExpanded, expanded }: ExpandingButtonProps) {
     const [newRepo, setNewRepo] = useState<string>('');
 
+    function repoNameFromURL(url:string):string {
+        // remove / and whitespace from end of URL to avoid empty names
+        const shavedURL: string = url.replace(/\/\s*$/, "");
+        const parsedURL: string[] = shavedURL.split('/'); 
+        // if, for some reason, URL does not have a parent, use NONE-PARENT
+		var parent: string = "NONE-PARENT"
+        if (parsedURL.length >= 2) {
+            parent = parsedURL[parsedURL.length - 2];
+        }
+        const name: string = parsedURL[parsedURL.length - 1];
+        const rebuiltName: string = `${parent}/${name}`
+        return rebuiltName;
+    }
+
     // TODO: fix issue where user can submit a repo name that already exists. Maybe random directory? random/dummy
     const handleKeyDown = (event: any) => {
         if (event.key === 'Enter') {
@@ -97,7 +103,7 @@ function AddManualRepoButton({ setItems, items, setExpanded, expanded }: Expandi
             setNewRepo('')
             setExpanded(expandedEnum.NONE)
             const newItems = items.slice();
-            newItems.push(new stripeItem({ name: newRepo, link: "#", typeItem: stripeItemType.REPO, children: [] }));
+            newItems.push(new stripeItem({ name: repoNameFromURL(newRepo), link: newRepo, typeItem: stripeItemType.REPO, children: [] }));
             setItems(newItems);
         }
     }
