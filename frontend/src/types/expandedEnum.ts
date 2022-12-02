@@ -5,6 +5,7 @@
 class expandedEnum {
     static readonly FOLDER = new expandedEnum() // add new folder bar expanded 
     static readonly MANUAL = new expandedEnum() // add manual repository button expanded
+    static readonly SETTINGS = new expandedEnum() // settings button expanded
     static readonly NONE = new expandedEnum() // none expanded
 
     // private to disallow creating other instances of this type

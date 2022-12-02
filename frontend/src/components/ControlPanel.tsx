@@ -6,6 +6,7 @@ import { stripeItem, stripeItemType } from "../types/StripeItem";
 import { AppProps, StripeItemsProps } from "../App";
 import { readGithub } from "../github-interface/GithubReader";
 import { expandedEnum } from "../types/expandedEnum";
+import { pageView } from "../types/pageView";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -22,6 +23,10 @@ interface ExpandingButtonProps {
     items: stripeItem[],
     setExpanded: Dispatch<SetStateAction<expandedEnum>>,
     expanded: expandedEnum
+}
+
+interface SettingsButtonProps extends ExpandingButtonProps {
+    setView: Dispatch<SetStateAction<pageView>>
 }
 
 function ControlledInput({ value, setValue, placeholder, keyHandler }: ControlledInputProps) {
@@ -124,12 +129,27 @@ function AddManualRepoButton({ setItems, items, setExpanded, expanded }: Expandi
     )
 }
 
-function SettingsButton({ setItems, items }: StripeItemsProps) {
+function SettingsButton({ setItems, items, setExpanded, expanded, setView }: SettingsButtonProps) {
+
+    // toggle between settings pageview and main pageview. Expand button
+    function toggleNavigateSettings() {
+        if (expanded === expandedEnum.SETTINGS) {
+            // shrink and go to main if already toggled to SETTINGS
+            setExpanded(expandedEnum.NONE)
+            setView(pageView.MAIN)
+        } else {
+            // expand and go to SETTINGS
+            setExpanded(expandedEnum.SETTINGS)
+            setView(pageView.SETTINGS)
+        }
+    }
+
     return (
         <motion.div
             layout
-            onClick={() => readGithub({ setItems, items })}
+            onClick={() => toggleNavigateSettings()}
             className="expand-button"
+            data-expanded={expanded === expandedEnum.SETTINGS}
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS
             }}>
@@ -138,9 +158,9 @@ function SettingsButton({ setItems, items }: StripeItemsProps) {
     )
 }
 
-// TODO: really ugly
-function BackButton({ setItems, items }: StripeItemsProps) {
+function BackButton(appPack: AppProps) {
 
+    // TODO: really ugly, breaks often
     function determineHomeItems(): stripeItem[] {
         if (globalThis.homeItems.length  > 0) {
             return globalThis.homeItems;
@@ -148,10 +168,16 @@ function BackButton({ setItems, items }: StripeItemsProps) {
         return [];
     }
 
+    // navigate to the settings pageview
+    function navigateHome() {
+        appPack.setView(pageView.MAIN);
+        appPack.setItems(determineHomeItems());
+    }
+
     return (
         <motion.div
             layout
-            onClick={() => { setItems(determineHomeItems()) }}
+            onClick={() => navigateHome() }
             className="expand-button"
             style={{
                 borderRadius: BUTTON_BORDER_RADIUS
@@ -174,7 +200,7 @@ function ControlPanel(appPack: AppProps) {
                 <BackButton {...appPack} />
                 <AddFolderButton setItems={appPack.setItems} items={appPack.items} setExpanded={setExpanded} expanded={expanded} />
                 <AddManualRepoButton setItems={appPack.setItems} items={appPack.items} setExpanded={setExpanded} expanded={expanded} />
-                <SettingsButton {...appPack} />
+                <SettingsButton setItems={appPack.setItems} items={appPack.items} setExpanded={setExpanded} expanded={expanded} setView={appPack.setView} />
             </LayoutGroup>
         </div>
     )
