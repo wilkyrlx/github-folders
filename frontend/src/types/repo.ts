@@ -1,4 +1,4 @@
-// Class that represents a repository
+// Class that represents a repository. Used with Github API
 export class Repo {
     name: string
     full_name: string

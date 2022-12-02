@@ -1,6 +1,6 @@
 import { StripeItemsProps } from "../App"
-import { stripeItem, stripeItemType } from "../data/StripeItem"
-import { Repo } from "../data/repo"
+import { stripeItem, stripeItemType } from "../types/StripeItem"
+import { Repo } from "../types/repo"
 import { githubToken } from "../private/GithubKey"
 import { Octokit } from "octokit"
 

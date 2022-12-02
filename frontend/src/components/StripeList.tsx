@@ -1,6 +1,6 @@
 import { Reorder } from "framer-motion";
 import "../styles/StripeList.css"
-import { stripeItem, stripeItemType } from "../data/StripeItem";
+import { stripeItem, stripeItemType } from "../types/StripeItem";
 import { StripeItemsProps } from "../App";
 
 

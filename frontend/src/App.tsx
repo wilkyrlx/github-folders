@@ -1,8 +1,11 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { stripeItem, stripeItemType } from "./data/StripeItem";
+import { stripeItem, stripeItemType } from "./types/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
 import { TypedJSON } from "typedjson";
+import { pageView } from "./types/pageView";
+import { Settings } from "./components/Settings";
+
 
 
 // TODO: this is a messy way of doing this - try to let react manage the state and remove all occurences of "globalThis.homeItems"
@@ -13,6 +16,13 @@ declare global {
 export interface StripeItemsProps {
 	setItems: Dispatch<SetStateAction<stripeItem[]>>,
 	items: stripeItem[],
+}
+
+export interface AppProps {
+	setItems: Dispatch<SetStateAction<stripeItem[]>>,
+	items: stripeItem[],
+	setView: Dispatch<SetStateAction<pageView>>,
+	view: pageView,
 }
 
 
@@ -45,20 +55,24 @@ function App() {
 	const brownCCG = new stripeItem({ name: "brown-ccg/ccg-website", link: "https://github.com/brown-ccg/ccg-website", typeItem: stripeItemType.REPO, children: [] })
 	const testFolder = new stripeItem({ name: "websites", link: "#", typeItem: stripeItemType.DIRECTORY, children: [brownPoker, brownCCG] })
 	const [items, setItems] = useState<stripeItem[]>([])
+	const [view, setView] = useState<pageView>(pageView.MAIN)
 
 	//TODO: documentation
 	function saveAllData() {
 		var toSave = { data: items };
 		local.set('repoDataKey', toSave);
 	}
-
 	//TODO: documentation
 	function loadAllData() {
 		var toLoad = local.get('repoDataKey')
 		let newItems = items.slice();
 		toLoad.data.forEach((element: stripeItem) => {
-			// note: ternary operator relies on only two types. If there are more, use a switch case
-			const constructedStripeItemType: stripeItemType = element.typeItem.id == 1 ? stripeItemType.REPO : stripeItemType.DIRECTORY;
+			var constructedStripeItemType: stripeItemType;
+			if (element.typeItem.id == 1) {
+				constructedStripeItemType = stripeItemType.REPO;
+			} else {
+				constructedStripeItemType = stripeItemType.DIRECTORY;
+			}
 			const constructedStripeItem: stripeItem = new stripeItem({name: element.name, link: element.link, typeItem: constructedStripeItemType, children:element.children})
 			newItems.push(constructedStripeItem)
 			console.log(constructedStripeItem)
@@ -67,12 +81,16 @@ function App() {
 	}
 
 
+	const itemsPack: StripeItemsProps = {setItems, items}
+	const appPack: AppProps = {setItems, items, setView, view}
+
 	return (
 		<div className="app">
 			<button onClick={() => saveAllData()}>save data</button>
 			<button onClick={() => loadAllData()}>load data</button>
-			<ControlPanel setItems={setItems} items={items} />
-			<StripeList setItems={setItems} items={items} />
+			<ControlPanel {...appPack} />
+			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }
+			{ view === pageView.SETTINGS && <Settings /> }
 		</div>
 	);
 }

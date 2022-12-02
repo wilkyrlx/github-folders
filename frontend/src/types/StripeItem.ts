@@ -4,8 +4,6 @@
 * path - path to the image icon
 * target - repo opens in new tab, directory executes on page
 */
-// TODO: check how chrome extensions work, repo may not have to open in new tab
-
 class stripeItemType {
     static readonly REPO = new stripeItemType(1, "/icons/command-line.svg", "_blank")
     static readonly DIRECTORY = new stripeItemType(2, "/icons/folder.svg", "_self")
@@ -22,7 +20,7 @@ interface stripeItemProps {
     children: stripeItem[]
 }
 
-// TODO: need to determine if doubly linked list is necessary or not
+// TODO: consider using a LIFO stack
 class stripeItem {
     public name: string;    // name (visible to user)
     public link: string;    // link to github repo (or # for directory)

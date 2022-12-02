@@ -2,9 +2,10 @@ import "../styles/ControlPanel.css"
 
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
-import { stripeItem, stripeItemType } from "../data/StripeItem";
-import { StripeItemsProps } from "../App";
+import { stripeItem, stripeItemType } from "../types/StripeItem";
+import { AppProps, StripeItemsProps } from "../App";
 import { readGithub } from "../github-interface/GithubReader";
+import { expandedEnum } from "../types/expandedEnum";
 
 
 export const BUTTON_BORDER_RADIUS = "25px"
@@ -161,27 +162,19 @@ function BackButton({ setItems, items }: StripeItemsProps) {
     )
 }
 
-class expandedEnum {
-    static readonly FOLDER = new expandedEnum()
-    static readonly MANUAL = new expandedEnum()
-    static readonly NONE = new expandedEnum()
 
-    // private to disallow creating other instances of this type
-    private constructor() {
-    }
-}
 
-function ControlPanel({ setItems, items }: StripeItemsProps) {
+function ControlPanel(appPack: AppProps) {
 
     const [expanded, setExpanded] = useState<expandedEnum>(expandedEnum.NONE)
 
     return (
         <div className="control-panel">
             <LayoutGroup>
-                <BackButton setItems={setItems} items={items} />
-                <AddFolderButton setItems={setItems} items={items} setExpanded={setExpanded} expanded={expanded} />
-                <AddManualRepoButton setItems={setItems} items={items} setExpanded={setExpanded} expanded={expanded} />
-                <SettingsButton setItems={setItems} items={items} />
+                <BackButton {...appPack} />
+                <AddFolderButton setItems={appPack.setItems} items={appPack.items} setExpanded={setExpanded} expanded={expanded} />
+                <AddManualRepoButton setItems={appPack.setItems} items={appPack.items} setExpanded={setExpanded} expanded={expanded} />
+                <SettingsButton {...appPack} />
             </LayoutGroup>
         </div>
     )
