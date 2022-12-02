@@ -25,12 +25,12 @@ var local = (function () {
 })();
 
 //TODO: documentation
-function saveAllData(items: stripeItem[]) {
+function saveLocalData(items: stripeItem[]) {
     var toSave = { data: items };
     local.set('repoDataKey', toSave);
 }
 //TODO: documentation
-function loadAllData({setItems, items }: StripeItemsProps) {
+function loadLocalData({setItems, items }: StripeItemsProps) {
     var toLoad = local.get('repoDataKey')
     let newItems = items.slice();
     toLoad.data.forEach((element: stripeItem) => {
@@ -47,4 +47,4 @@ function loadAllData({setItems, items }: StripeItemsProps) {
     setItems(newItems);
 }
 
-export { saveAllData, loadAllData }
+export { saveLocalData, loadLocalData }

@@ -4,7 +4,7 @@ import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
 import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
-import { loadAllData, saveAllData } from "./save-data/saveLocalData";
+import { loadLocalData, saveLocalData } from "./save-data/saveLocalData";
 import { readGithub } from "./github-interface/GithubReader";
 
 
@@ -35,10 +35,10 @@ function App() {
 
 	return (
 		<div className="app">
-			<button onClick={() => saveAllData(items)}>save data</button>
-			<button onClick={() => loadAllData({...itemsPack})}>load data</button>
+			<button onClick={() => saveLocalData(items)}>save data</button>
+			<button onClick={() => loadLocalData({...itemsPack})}>load data</button>
 			<button onClick={() => readGithub({...appPack})}>github API</button>
-			
+
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }
 			{ view === pageView.SETTINGS && <Settings /> }

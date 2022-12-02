@@ -4,12 +4,11 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import { motion, LayoutGroup } from "framer-motion"
 import { stripeItem, stripeItemType } from "../types/StripeItem";
 import { AppProps, StripeItemsProps } from "../App";
-import { readGithub } from "../github-interface/GithubReader";
 import { expandedEnum } from "../types/expandedEnum";
 import { pageView } from "../types/pageView";
 
 
-export const BUTTON_BORDER_RADIUS = "25px"
+const BUTTON_BORDER_RADIUS = "25px"
 
 interface ControlledInputProps {
     value: string,
@@ -130,7 +129,6 @@ function AddManualRepoButton({ setItems, items, setExpanded, expanded }: Expandi
 }
 
 function SettingsButton({ setItems, items, setExpanded, expanded, setView }: SettingsButtonProps) {
-
     // toggle between settings pageview and main pageview. Expand button
     function toggleNavigateSettings() {
         if (expanded === expandedEnum.SETTINGS) {
@@ -193,7 +191,6 @@ function BackButton(appPack: AppProps) {
 function ControlPanel(appPack: AppProps) {
 
     const [expanded, setExpanded] = useState<expandedEnum>(expandedEnum.NONE)
-
     return (
         <div className="control-panel">
             <LayoutGroup>
