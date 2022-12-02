@@ -21,6 +21,8 @@ Coming soon! :)
 [Icons - heroicons](https://heroicons.com/) 
 <br>
 [cyrb53 hash - bryc](https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js)
+<br>
+[Github icon - Github](https://github.com/logos)
 
 ## Useful links
 oauth with github - http://thecodebarbarian.com/github-oauth-login-with-node-js.html 
