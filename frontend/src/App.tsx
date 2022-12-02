@@ -2,9 +2,9 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { stripeItem, stripeItemType } from "./types/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
-import { TypedJSON } from "typedjson";
 import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
+import { loadAllData, saveAllData } from "./save-data/saveLocalData";
 
 
 
@@ -26,28 +26,6 @@ export interface AppProps {
 }
 
 
-//TODO: documentation
-// https://stackoverflow.com/questions/34951170/save-json-to-chrome-storage-local-storage
-var local = (function () {
-
-	var setData = function (key: string, obj: any) {
-		var values = JSON.stringify(obj);
-		localStorage.setItem(key, values);
-	
-	}
-
-	var getData = function (key: string) {
-		if (localStorage.getItem(key) != null) {
-			return JSON.parse(localStorage.getItem(key) as string);
-		} else {
-			return false;
-		}
-	}
-
-	return { set: setData, get: getData }
-})();
-
-
 function App() {
 	// for testing only
 	const esgaroth = new stripeItem({ name: "esgaroth", link: "https://github.com/wilkyrlx/esgaroth", typeItem: stripeItemType.REPO, children: [] })
@@ -57,37 +35,13 @@ function App() {
 	const [items, setItems] = useState<stripeItem[]>([])
 	const [view, setView] = useState<pageView>(pageView.MAIN)
 
-	//TODO: documentation
-	function saveAllData() {
-		var toSave = { data: items };
-		local.set('repoDataKey', toSave);
-	}
-	//TODO: documentation
-	function loadAllData() {
-		var toLoad = local.get('repoDataKey')
-		let newItems = items.slice();
-		toLoad.data.forEach((element: stripeItem) => {
-			var constructedStripeItemType: stripeItemType;
-			if (element.typeItem.id == 1) {
-				constructedStripeItemType = stripeItemType.REPO;
-			} else {
-				constructedStripeItemType = stripeItemType.DIRECTORY;
-			}
-			const constructedStripeItem: stripeItem = new stripeItem({name: element.name, link: element.link, typeItem: constructedStripeItemType, children:element.children})
-			newItems.push(constructedStripeItem)
-			console.log(constructedStripeItem)
-		});
-		setItems(newItems);
-	}
-
-
 	const itemsPack: StripeItemsProps = {setItems, items}
 	const appPack: AppProps = {setItems, items, setView, view}
 
 	return (
 		<div className="app">
-			<button onClick={() => saveAllData()}>save data</button>
-			<button onClick={() => loadAllData()}>load data</button>
+			<button onClick={() => saveAllData(items)}>save data</button>
+			<button onClick={() => loadAllData({...itemsPack})}>load data</button>
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }
 			{ view === pageView.SETTINGS && <Settings /> }
