@@ -1,4 +1,4 @@
-# WIP: Git Commit Chrome Extension
+# WIP: Github Folders - Chrome Extension
 The vision of this project is a simple, clean chrome extension to improve the github repository UI. Users will have access to a clean list of their repos, including:
 - repos they own
 - repos they have committed to 
