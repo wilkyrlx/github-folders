@@ -23,8 +23,11 @@ Coming soon! :)
 [cyrb53 hash - bryc](https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js)
 <br>
 [Github icon - Github](https://github.com/logos)
+<br>
+[Github OAuth - TomDoesTech](https://www.youtube.com/watch?v=qUE4-kSlPIk)
 
 ## Useful links
 oauth with github - http://thecodebarbarian.com/github-oauth-login-with-node-js.html 
 <br>
 react chrome extension - https://medium.com/litslink/how-to-create-google-chrome-extension-using-react-js-5c9e343323ff
+
