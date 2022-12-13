@@ -50,6 +50,7 @@ function ControlledInput({ value, setValue, placeholder, keyHandler }: Controlle
     );
 }
 
+// TODO: user-generated folders are useless right now. Need drag-n-drop system to make them useful
 function AddFolderButton({ setItems, items, setExpanded, expanded }: ExpandingButtonProps) {
     const [newFolder, setNewFolder] = useState<string>('');
 
@@ -82,7 +83,11 @@ function AddFolderButton({ setItems, items, setExpanded, expanded }: ExpandingBu
 
 }
 
-
+/**
+ * Add a repository from a URL. Split on any / character and use the last two parts of the URL as the name.
+ * If only one part, use the first part as the name and the parent is automatically NONE-PARENT
+ * @param props - for setting stripeItems and expanding button 
+ */
 function AddManualRepoButton({ setItems, items, setExpanded, expanded }: ExpandingButtonProps) {
     const [newRepo, setNewRepo] = useState<string>('');
 
@@ -128,6 +133,7 @@ function AddManualRepoButton({ setItems, items, setExpanded, expanded }: Expandi
     )
 }
 
+// Settings button is used to toggle between settings pageview and main pageview
 function SettingsButton({ setItems, items, setExpanded, expanded, setView }: SettingsButtonProps) {
     // toggle between settings pageview and main pageview. Expand button
     function toggleNavigateSettings() {
@@ -156,6 +162,11 @@ function SettingsButton({ setItems, items, setExpanded, expanded, setView }: Set
     )
 }
 
+// TODO: implement a FIFO queue for the items instead of global state
+/**
+ * Back button to navigate to the home pageview and initial stripeItems
+ * @param appPack - props for setting items, view
+ */
 function BackButton(appPack: AppProps) {
 
     // TODO: really ugly, breaks often
@@ -187,7 +198,11 @@ function BackButton(appPack: AppProps) {
 }
 
 
-
+/**
+ * All buttons are in a LayoutGroup such that they animate together
+ * The control panel currently has 4 buttons: Back, Add Folder, Add Manual Repo, Settings 
+ * @param appPack - props for setting items, view
+ */
 function ControlPanel(appPack: AppProps) {
 
     const [expanded, setExpanded] = useState<expandedEnum>(expandedEnum.NONE)
