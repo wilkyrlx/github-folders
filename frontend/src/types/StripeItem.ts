@@ -1,12 +1,14 @@
 /**
 * This class functions as an enum with fields:
-* id - 1 for repo, 2 for directory. This is crucial for JSON parsing. Int so it can be extended
+* id - 1 for repo, 2 for directory, 3 for org. This is crucial for JSON parsing. Int so it can be extended
 * path - path to the image icon
 * target - repo opens in new tab, directory executes on page
 */
 class stripeItemType {
     static readonly REPO = new stripeItemType(1, "/icons/command-line.svg", "_blank")
     static readonly DIRECTORY = new stripeItemType(2, "/icons/folder.svg", "_self")
+    static readonly ORGANIZATION = new stripeItemType(3, "/icons/globe.svg", "_blank")
+
 
     // private to disallow creating other instances of this type
     private constructor(public readonly id: number, public readonly path: string, public readonly target: any) {

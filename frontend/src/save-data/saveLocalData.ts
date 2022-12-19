@@ -37,8 +37,12 @@ function loadLocalData({setItems, items }: StripeItemsProps) {
         var constructedStripeItemType: stripeItemType;
         if (element.typeItem.id == 1) {
             constructedStripeItemType = stripeItemType.REPO;
-        } else {
+        } else if (element.typeItem.id == 2) {
             constructedStripeItemType = stripeItemType.DIRECTORY;
+        } else if (element.typeItem.id == 3) {
+            constructedStripeItemType = stripeItemType.ORGANIZATION;
+        } else {
+            throw new Error("Invalid stripeItemType id");
         }
         const constructedStripeItem: stripeItem = new stripeItem({ name: element.name, link: element.link, typeItem: constructedStripeItemType, children: element.children })
         newItems.push(constructedStripeItem)

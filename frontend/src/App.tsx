@@ -5,7 +5,7 @@ import StripeList from "./components/StripeList";
 import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
 import { loadLocalData, saveLocalData } from "./save-data/saveLocalData";
-import { readGithub } from "./github-interface/GithubReader";
+import { readGithub, testAPI } from "./github-interface/GithubReader";
 import OAuthInterface from "./github-interface/OAuthInterface";
 
 
@@ -39,6 +39,7 @@ function App() {
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({...itemsPack})}>load data</button>
 			<button onClick={() => readGithub({...appPack})}>github API</button>
+			<button onClick={() => testAPI()}>github API testing</button>
 			<OAuthInterface />
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }

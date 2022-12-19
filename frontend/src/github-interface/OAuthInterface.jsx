@@ -22,11 +22,13 @@ function OAuthInterface() {
     })();
   }, []);
 
+  // TODO: verify all this scope is necessary
+  const scope = "admin:org admin:public_key admin:repo_hook project repo user";
   return (
     <div className="App">
       {!user ? (
         <a
-          href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=user:repo`}
+          href={`https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${path}&scope=${scope}`}
         >
           LOGIN WITH GITHUB
         </a>

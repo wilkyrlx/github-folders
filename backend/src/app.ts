@@ -69,6 +69,7 @@ async function getGitHubUser({ code }: { code: string }): Promise<GitHubUser> {
     });
 
   const decoded = querystring.parse(githubToken);
+  console.log(decoded);
 
   const accessToken = decoded.access_token;
 

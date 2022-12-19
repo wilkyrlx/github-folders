@@ -4,6 +4,8 @@ import { Repo } from "../types/repo"
 import { githubToken } from "../private/GithubKey"
 import { Octokit } from "octokit"
 
+// TODO: perhaps move API calls to backend?
+ 
 // authorization for API calls
 const octokit = new Octokit({
     //TODO: use oauth
@@ -18,7 +20,12 @@ const octokit = new Octokit({
  */
 async function readGithub({ setItems, items }: StripeItemsProps) {
     // second param can be mockAPIRepsonse() or githubAPIResponse(). Latter for deployment
-    addGithubRepos({ setItems, items }, mockAPIResponse(), "wilkyrlx", false);
+    const githubRepos = await addGithubRepos(githubAPIResponse(), "wilkyrlx", false);
+    const githubOrgs = await addGithubOrgs(getOrgsAPIResponse());
+
+    let newItems = items.slice();
+    const allItems = [...newItems, ...githubRepos, ...githubOrgs];
+	setItems(allItems);
 }
 
 /**
@@ -49,11 +56,10 @@ async function githubAPIResponse(): Promise<Repo[]> {
 async function getGeneralReposAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
-    // TODO: add better error catching here
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
     const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;
     repoData.forEach((repo: any) => {
-        repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, repo.owner.login));
+        repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner.login));
     });
     return repoListFull;
 }
@@ -78,10 +84,30 @@ async function getTeamReposAPIResponse(): Promise<Repo[]> {
         // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
         const teamRepoData = (await octokit.request(team.repositories_url, {})).data;
         teamRepoData.forEach((repo: any) => {
-            repoListFull.push(new Repo(repo.name, repo.full_name, repo.html_url, repo.owner.login));
+            repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner.login));
         });
     };
     return repoListFull;
+}
+
+async function getOrgsAPIResponse(): Promise<Repo[]> {
+    const orgsListFull: Repo[] = [];
+
+    const orgData = (await octokit.request('GET /user/memberships/orgs', {})).data;
+    for(const org of orgData) {
+        const orgSpecificData = (await octokit.request(org.organization.url, {})).data;
+        orgsListFull.push(new Repo(orgSpecificData.login, orgSpecificData.html_url, orgSpecificData.login));
+    };
+    return orgsListFull;
+}
+
+
+    
+// TODO: remove me
+async function testAPI(){
+    const testData = (await octokit.request('GET /user/memberships/orgs', {})).data;
+    console.log(testData);
+
 }
 
 /**
@@ -91,11 +117,10 @@ async function getTeamReposAPIResponse(): Promise<Repo[]> {
  * @param personalName - name of personal github account. I.e. user wilkyrlx would be "wilkyrlx"
  * @param makePersonalDirectory - false normally, true if user wants a separate directory for personal repos
  */
-async function addGithubRepos({ setItems, items }: StripeItemsProps, repoListPromise: Promise<Repo[]>, personalName: string, makePersonalDirectory: boolean) {
+async function addGithubRepos(repoListPromise: Promise<Repo[]>, personalName: string, makePersonalDirectory: boolean): Promise<stripeItem[]> {
     const repoList: Repo[] = await repoListPromise;
     // map of owner name to list of stripeItems. Owner could be user (wilkyrlx), organization, class, etc.
     let ownerMap: Map<string, stripeItem[]> = new Map();
-    const newItems = items.slice();
 
     // for each repository, check the owner and add to hashmap. Repos with same owner get added to a list of stripeItems
     repoList.forEach((repo: Repo) => {
@@ -113,28 +138,41 @@ async function addGithubRepos({ setItems, items }: StripeItemsProps, repoListPro
         }
     });
 
+    const addItems: stripeItem[] = [];
+
     // for each owner, create a new directory where the childer are the list of stripeItem repos
     // do not create a directory for the personal repos
     ownerMap.forEach((ownerDirectory: stripeItem[], ownerName: string) => {
         if (ownerName === personalName && !makePersonalDirectory) {
-            newItems.push.apply(newItems, ownerDirectory)
+            addItems.push.apply(addItems, ownerDirectory)
         } else {
-            newItems.push(new stripeItem({ name: ownerName, link: "#", typeItem: stripeItemType.DIRECTORY, children: ownerDirectory }))
+            addItems.push(new stripeItem({ name: ownerName, link: "#", typeItem: stripeItemType.DIRECTORY, children: ownerDirectory }))
         }
     })
 
-    setItems(newItems);
+    return addItems;
+}
+
+async function addGithubOrgs(orgListPromise: Promise<Repo[]>): Promise<stripeItem[]> {
+    const orgList: Repo[] = await orgListPromise;
+    const addItems: stripeItem[] = [];
+
+    orgList.forEach((org: Repo) => {
+        addItems.push(new stripeItem({ name: org.name, link: org.html_url, typeItem: stripeItemType.ORGANIZATION, children: [] }))
+    })
+
+    return addItems;    
 }
 
 // mocks an API call, use in place of githubAPIResponse
 async function mockAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
-    repoListFull.push(new Repo("ccg", "brown-ccg/ccg", "https://github.com/brown-ccg/ccg-website", "brown-ccg"));
-    repoListFull.push(new Repo("ccg-tools", "brown-ccg/ccg-tools", "https://github.com/brown-ccg", "brown-ccg"));
-    repoListFull.push(new Repo("esgaroth2", "wilkyrlx/esgaroth", "https://github.com/wilkyrlx/esgaroth", "wilkyrlx"));
+    repoListFull.push(new Repo("ccg", "https://github.com/brown-ccg/ccg-website", "brown-ccg"));
+    repoListFull.push(new Repo("ccg-tools", "https://github.com/brown-ccg", "brown-ccg"));
+    repoListFull.push(new Repo("esgaroth2", "https://github.com/wilkyrlx/esgaroth", "wilkyrlx"));
 
     return repoListFull;
 }
 
-export { readGithub }
+export { readGithub, testAPI }
