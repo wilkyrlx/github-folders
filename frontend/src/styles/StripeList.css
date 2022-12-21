@@ -1,13 +1,22 @@
-li {
+.stripe-li {
   border-radius: 10px;
   margin-bottom: 10px;
-  width: 70vw;
+  margin-left: -30px;
+  width: 370px;
   border:2px solid rgba(166, 166, 164, 0.769);
   padding:10px 50px 10px 10px;
   font-weight: bold;
   background:rgb(255, 255, 255);
+  list-style-type: none;
+}
+
+.stripe-li-ad {
+  border:3px solid #FFD700 !important;
+}
+
+.stripe-list-bar {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 
 a, a:visited{
@@ -15,7 +24,7 @@ a, a:visited{
   color: #0E6CDB;
 }
 
-.stripe-item {
+.stripe-contents {
   display: flex;
   align-items: center;
   justify-content:right;
@@ -30,6 +39,7 @@ a, a:visited{
 
 .stripe-delete {
   width: 25px !important;
+  /* TODO: could change this to -20 or something like that */
   margin-right: 0px !important;
   opacity: 0.2;
 }
