@@ -8,7 +8,8 @@ class stripeItemType {
     static readonly REPO = new stripeItemType(1, "/icons/command-line.svg", "_blank")
     static readonly DIRECTORY = new stripeItemType(2, "/icons/folder.svg", "_self")
     static readonly ORGANIZATION = new stripeItemType(3, "/icons/globe.svg", "_blank")
-
+    // TODO: find svg icon for this
+    static readonly AD = new stripeItemType(4, "/icons/globe.svg", "_blank")
 
     // private to disallow creating other instances of this type
     private constructor(public readonly id: number, public readonly path: string, public readonly target: any) {

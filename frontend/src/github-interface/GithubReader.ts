@@ -101,15 +101,6 @@ async function getOrgsAPIResponse(): Promise<Repo[]> {
     return orgsListFull;
 }
 
-
-    
-// TODO: remove me
-async function testAPI(){
-    const testData = (await octokit.request('GET /user/memberships/orgs', {})).data;
-    console.log(testData);
-
-}
-
 /**
  * 
  * @param StripeItemProps - props to set new stripeItems and read existing stripeItems 
@@ -158,7 +149,8 @@ async function addGithubOrgs(orgListPromise: Promise<Repo[]>): Promise<stripeIte
     const addItems: stripeItem[] = [];
 
     orgList.forEach((org: Repo) => {
-        addItems.push(new stripeItem({ name: org.name, link: org.html_url, typeItem: stripeItemType.ORGANIZATION, children: [] }))
+        const codedName = `org/${org.name}`;
+        addItems.push(new stripeItem({ name: codedName, link: org.html_url, typeItem: stripeItemType.ORGANIZATION, children: [] }))
     })
 
     return addItems;    
@@ -175,4 +167,4 @@ async function mockAPIResponse(): Promise<Repo[]> {
     return repoListFull;
 }
 
-export { readGithub, testAPI }
+export { readGithub }

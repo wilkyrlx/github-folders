@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import axios from "axios";
 import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
+import testAPI from "./handlers/githubHandler";
 
 const app = express();
 app.use(cookieParser());
@@ -70,6 +71,8 @@ async function getGitHubUser({ code }: { code: string }): Promise<GitHubUser> {
 
   const decoded = querystring.parse(githubToken);
   console.log(decoded);
+
+  testAPI(decoded.access_token as string)
 
   const accessToken = decoded.access_token;
 

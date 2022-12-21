@@ -6,14 +6,11 @@ import { StripeItemsProps } from "../App";
 
 
 function StripeList({ setItems, items }: StripeItemsProps) {
-	// this is the most disgusting code ever written
 	function handleClick(item: stripeItem) {
-		console.log(item.typeItem as stripeItemType)
 		const isDirectory = item.typeItem === stripeItemType.DIRECTORY
 		if (isDirectory) {
 			globalThis.homeItems = items;
 			setItems(item.children);
-			console.log(item.children)
 		}
 	}
 
@@ -31,9 +28,8 @@ function StripeList({ setItems, items }: StripeItemsProps) {
 	 * @returns - a display name, for all above examples would be dummy
 	 */
 	function displayName(rawName: string): string {
-		//const parsedName: string[] = rawName.split('/');
-		//return parsedName[parsedName.length - 1];
-		return rawName;
+		const parsedName: string[] = rawName.split('/');
+		return parsedName[parsedName.length - 1];
 	}
 
 	// Actual list of items

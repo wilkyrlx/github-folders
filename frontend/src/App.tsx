@@ -5,7 +5,7 @@ import StripeList from "./components/StripeList";
 import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
 import { loadLocalData, saveLocalData } from "./save-data/saveLocalData";
-import { readGithub, testAPI } from "./github-interface/GithubReader";
+import { readGithub } from "./github-interface/GithubReader";
 import OAuthInterface from "./github-interface/OAuthInterface";
 
 
@@ -29,6 +29,7 @@ export interface AppProps {
 
 function App() {
 	const [items, setItems] = useState<stripeItem[]>([])
+	const [directoryView, setDirectoryView] = useState<stripeItem[][]>([items])
 	const [view, setView] = useState<pageView>(pageView.MAIN)
 
 	const itemsPack: StripeItemsProps = {setItems, items}
@@ -39,7 +40,6 @@ function App() {
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({...itemsPack})}>load data</button>
 			<button onClick={() => readGithub({...appPack})}>github API</button>
-			<button onClick={() => testAPI()}>github API testing</button>
 			<OAuthInterface />
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }
