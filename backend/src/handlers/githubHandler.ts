@@ -7,10 +7,11 @@ import { githubToken } from "../private/GithubKey";
 async function testAPI(token: string) {
     // authorization for API calls
     const octokit = new Octokit({
-        auth: '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'
+        auth: githubToken,
     })
     const testData = (await octokit.request('GET /user/memberships/orgs', {})).data;
-    console.log(`this is the MONKEY${testData}`);
+    const jsonToString = JSON.stringify(testData);
+    console.log(`this is the MONKEY${jsonToString}`);
 }
 
 export default testAPI;
