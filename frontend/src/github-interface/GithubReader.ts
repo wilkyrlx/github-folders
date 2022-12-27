@@ -58,6 +58,7 @@ async function getGeneralReposAPIResponse(): Promise<Repo[]> {
 
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
     const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;
+    console.log(repoData);
     repoData.forEach((repo: any) => {
         repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner.login));
     });

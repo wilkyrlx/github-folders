@@ -12,6 +12,15 @@ async function testAPI(token: string) {
     const testData = (await octokit.request('GET /user/memberships/orgs', {})).data;
     const jsonToString = JSON.stringify(testData);
     console.log(`this is the MONKEY${jsonToString}`);
+    return {testObj: "1", testObj2: "2 - object"}
 }
 
-export default testAPI;
+async function generalAPI(token: string) {
+    const octokit = new Octokit({
+        auth: githubToken,
+    })
+    const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;
+    return repoData
+}
+
+export { testAPI, generalAPI };

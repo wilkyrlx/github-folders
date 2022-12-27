@@ -32,7 +32,8 @@ function App() {
 	// runs when the component is mounted (only once)
 	useEffect(() => {
 		console.log('initializing app - loading data');
-		loadLocalData({setItems, items});
+		// TODO: better error handling when localStorage is empty
+		// loadLocalData({setItems, items});
 	}, []);
 
 	const [items, setItems] = useState<stripeItem[]>([])

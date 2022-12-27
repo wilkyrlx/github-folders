@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import axios from "axios";
 import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
-import testAPI from "./handlers/githubHandler";
+import { testAPI } from "./handlers/githubHandler";
 
 const app = express();
 app.use(cookieParser());
@@ -58,7 +58,7 @@ export interface GitHubUser {
   updated_at: Date;
 }
 
-async function getGitHubUser({ code }: { code: string }): Promise<GitHubUser> {
+async function getGitHubUser({ code }: { code: string }): Promise<any> {
   const githubToken = await axios
     .post(
       `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${code}`

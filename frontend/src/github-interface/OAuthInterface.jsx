@@ -18,7 +18,7 @@ function OAuthInterface() {
         .then((res) => res.data)
         .then((data) => console.log(data));
 
-      setUser(usr);
+      // setUser(usr);
     })();
   }, []);
 
