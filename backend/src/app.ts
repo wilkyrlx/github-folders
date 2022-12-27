@@ -7,13 +7,20 @@ import axios from "axios";
 import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
 import { generalAPI, mockResponse, testAPI } from "./handlers/githubHandler";
+import { GithubResponse } from "./util/responseShape";
+import { Octokit } from "octokit";
+import { orgsHandler } from "./handlers/orgsHandler";
+import { generalHandler } from "./handlers/generalHandler";
+import { teamsHandler } from "./handlers/teamsHandler";
 
 const app = express();
 app.use(cookieParser());
 
 const GITHUB_CLIENT_ID = githubClientID;
 const GITHUB_CLIENT_SECRET = githubClientSecret;
+// TODO: rewatch tutorial to check what the difference between secrets is
 const secret = githubClientSecret;
+// TODO: multiple cookies for different data
 const COOKIE_NAME = "github-jwt";
 
 app.use(
@@ -23,42 +30,8 @@ app.use(
   })
 );
 
-export interface GitHubUser {
-  login: string;
-  id: number;
-  node_id: string;
-  avatar_url: string;
-  gravatar_id: string;
-  url: string;
-  html_url: string;
-  followers_url: string;
-  following_url: string;
-  gists_url: string;
-  starred_url: string;
-  subscriptions_url: string;
-  organizations_url: string;
-  repos_url: string;
-  events_url: string;
-  received_events_url: string;
-  type: string;
-  site_admin: boolean;
-  name: string;
-  company: null;
-  blog: string;
-  location: string;
-  email: null;
-  hireable: null;
-  bio: null;
-  twitter_username: null;
-  public_repos: number;
-  public_gists: number;
-  followers: number;
-  following: number;
-  created_at: Date;
-  updated_at: Date;
-}
 
-async function getGitHubUser({ code }: { code: string }): Promise<any> {
+async function getGitHubUser({ code }: { code: string }): Promise<GithubResponse> {
   const githubToken = await axios
     .post(
       `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${code}`
@@ -70,21 +43,12 @@ async function getGitHubUser({ code }: { code: string }): Promise<any> {
     });
 
   const decoded = querystring.parse(githubToken);
-
-  const x = testAPI(decoded.access_token as string)
+  const octokit = new Octokit({
+    //TODO: use oauth
+    auth: decoded.access_token as string
+  })
+  const x = teamsHandler(octokit)
   return x;
-
-  const accessToken = decoded.access_token;
-
-  return axios
-    .get("https://api.github.com/user", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-    .then((res) => res.data)
-    .catch((error) => {
-      console.error(`Error getting user from GitHub`);
-      throw error;
-    });
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
@@ -95,46 +59,28 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  // const gitHubUser = await getGitHubUser({ code });
-  const gitHubUser = mockResponse;
+  const gitHubUser = await getGitHubUser({ code });
 
-  const inputString: string = JSON.stringify(gitHubUser).toString();
+  const token = jwt.sign(gitHubUser, secret);
 
-  let token: string = "empty token"
-  try {
-    token = jwt.sign(gitHubUser, secret);
-  } catch (error) {
-    console.error(error);
-  }
   console.log(token + " token");
-  try {
-    res.cookie(COOKIE_NAME, token, {
-      httpOnly: true,
-      domain: "localhost",
-    });
-    console.log("cookie set");
-  } catch (error) {
-    console.log(error + "with cookie");
-  }
 
+  // TODO: check if cookie is too big
+  res.cookie(COOKIE_NAME, token, {
+    httpOnly: true,
+    domain: "localhost",
+  });
 
   res.redirect(`http://localhost:3000${path}`);
 });
 
 app.get("/api/me", (req: Request, res: Response) => {
   var cookie;
+  cookie = get(req, `cookies[${COOKIE_NAME}]`);
 
-  try {
-    cookie = get(req, `cookies[${COOKIE_NAME}]`);
-    console.log(cookie+ "cookie get")
-
-  } catch (error) {
-    console.log(error + "with cookie get")
-  }
 
   try {
     const decode = jwt.verify(cookie, secret);
-    console.log(JSON.stringify(decode) + "decode worked as inteneded")
     return res.send(decode);
   } catch (e) {
     console.log(e);
