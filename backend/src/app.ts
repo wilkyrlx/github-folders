@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import axios from "axios";
 import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
-import { testAPI } from "./handlers/githubHandler";
+import { generalAPI, mockResponse, testAPI } from "./handlers/githubHandler";
 
 const app = express();
 app.use(cookieParser());
@@ -70,9 +70,9 @@ async function getGitHubUser({ code }: { code: string }): Promise<any> {
     });
 
   const decoded = querystring.parse(githubToken);
-  console.log(decoded);
 
-  testAPI(decoded.access_token as string)
+  const x = testAPI(decoded.access_token as string)
+  return x;
 
   const accessToken = decoded.access_token;
 
@@ -95,26 +95,49 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  const gitHubUser = await getGitHubUser({ code });
+  // const gitHubUser = await getGitHubUser({ code });
+  const gitHubUser = mockResponse;
 
-  const token = jwt.sign(gitHubUser, secret);
+  const inputString: string = JSON.stringify(gitHubUser).toString();
 
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    domain: "localhost",
-  });
+  let token: string = "empty token"
+  try {
+    token = jwt.sign(gitHubUser, secret);
+  } catch (error) {
+    console.error(error);
+  }
+  console.log(token + " token");
+  try {
+    res.cookie(COOKIE_NAME, token, {
+      httpOnly: true,
+      domain: "localhost",
+    });
+    console.log("cookie set");
+  } catch (error) {
+    console.log(error + "with cookie");
+  }
+
 
   res.redirect(`http://localhost:3000${path}`);
 });
 
 app.get("/api/me", (req: Request, res: Response) => {
-  const cookie = get(req, `cookies[${COOKIE_NAME}]`);
+  var cookie;
+
+  try {
+    cookie = get(req, `cookies[${COOKIE_NAME}]`);
+    console.log(cookie+ "cookie get")
+
+  } catch (error) {
+    console.log(error + "with cookie get")
+  }
 
   try {
     const decode = jwt.verify(cookie, secret);
-
+    console.log(JSON.stringify(decode) + "decode worked as inteneded")
     return res.send(decode);
   } catch (e) {
+    console.log(e);
     return res.send(null);
   }
 });
