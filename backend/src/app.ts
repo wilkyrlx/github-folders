@@ -6,25 +6,23 @@ import cookieParser from "cookie-parser";
 import axios from "axios";
 import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
-import { generalAPI, mockResponse, testAPI } from "./handlers/githubHandler";
 import { GithubResponse } from "./util/responseShape";
 import { Octokit } from "octokit";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { generalHandler } from "./handlers/generalHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
 
-const app = express();
-app.use(cookieParser());
-
 const GITHUB_CLIENT_ID = githubClientID;
 const GITHUB_CLIENT_SECRET = githubClientSecret;
 // TODO: rewatch tutorial to check what the difference between secrets is
 const secret = githubClientSecret;
-// TODO: multiple cookies for different data
+// multiple cookies for different data
 const COOKIE_GENERAL = "github-jwt-general";
 const COOKIE_ORGS = "github-jwt-orgs";
 const COOKIE_TEAMS = "github-jwt-teams";
 
+const app = express();
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -83,7 +81,7 @@ function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, c
 
   // TODO: check if cookie is too big
   const byteLengthUtf8 = (str: string) => new Blob([str]).size
-  console.log(byteLengthUtf8(token));
+  console.log(`bytes in cookie ${cookieName}: ${byteLengthUtf8(token)}`);
 
   res.cookie(cookieName, token, {
     httpOnly: true,

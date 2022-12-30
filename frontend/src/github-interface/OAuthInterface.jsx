@@ -18,9 +18,18 @@ function OAuthInterface() {
         })
         .then((res) => res.data)
         .then((data) => console.log(data));
-
-      // setUser(usr);
     })();
+
+    (async function () {
+      const usr = await axios
+        .get(`http://localhost:4000/api/orgs`, {
+          withCredentials: true,
+          credentials: 'include', // Don't forget to specify this if you need cookies
+        })
+        .then((res) => res.data)
+        .then((data) => console.log(data));
+    })();
+
     (async function () {
       const usr = await axios
         .get(`http://localhost:4000/api/teams`, {
