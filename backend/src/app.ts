@@ -21,7 +21,10 @@ const GITHUB_CLIENT_SECRET = githubClientSecret;
 // TODO: rewatch tutorial to check what the difference between secrets is
 const secret = githubClientSecret;
 // TODO: multiple cookies for different data
-const COOKIE_NAME = "github-jwt";
+const COOKIE_GENERAL = "github-jwt-general";
+const COOKIE_ORGS = "github-jwt-orgs";
+const COOKIE_TEAMS = "github-jwt-teams";
+
 
 app.use(
   cors({
@@ -59,26 +62,32 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  const gitHubUser = await getGitHubUser({ code });
+  const githubGeneral: GithubResponse = await getGitHubUser({ code });
+  const githubOrgs: GithubResponse = githubGeneral
+  const githubTeams: GithubResponse = githubGeneral
 
-  const token = jwt.sign(gitHubUser, secret);
-
-  console.log(token + " token");
-
-  // TODO: check if cookie is too big
-  res.cookie(COOKIE_NAME, token, {
-    httpOnly: true,
-    domain: "localhost",
-  });
+  generateCookiesFromResponse(res, githubGeneral, COOKIE_GENERAL);
+  generateCookiesFromResponse(res, githubOrgs, COOKIE_ORGS);
+  generateCookiesFromResponse(res, githubTeams, COOKIE_TEAMS);
 
   res.redirect(`http://localhost:3000${path}`);
 });
 
-app.get("/api/me", (req: Request, res: Response) => {
+function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, cookieName: string) {
+  const token: string = jwt.sign(githubRes, secret);
+  // TODO: check if cookie is too big
+  res.cookie(cookieName, token, {
+    httpOnly: true,
+    domain: "localhost",
+  });
+}
+
+// =============================================================================
+// DATA ENDPOINTS - return minimum JSON data needed for frontend, parsed from github API
+// =============================================================================
+app.get("/api/general", (req: Request, res: Response) => {
   var cookie;
-  cookie = get(req, `cookies[${COOKIE_NAME}]`);
-
-
+  cookie = get(req, `cookies[${COOKIE_GENERAL}]`);
   try {
     const decode = jwt.verify(cookie, secret);
     return res.send(decode);
@@ -87,6 +96,32 @@ app.get("/api/me", (req: Request, res: Response) => {
     return res.send(null);
   }
 });
+
+app.get("/api/orgs", (req: Request, res: Response) => {
+  var cookie;
+  cookie = get(req, `cookies[${COOKIE_ORGS}]`);
+  try {
+    const decode = jwt.verify(cookie, secret);
+    return res.send(decode);
+  } catch (e) {
+    console.log(e);
+    return res.send(null);
+  }
+});
+
+app.get("/api/teams", (req: Request, res: Response) => {
+  var cookie;
+  cookie = get(req, `cookies[${COOKIE_TEAMS}]`);
+  try {
+    const decode = jwt.verify(cookie, secret);
+    return res.send(decode);
+  } catch (e) {
+    console.log(e);
+    return res.send(null);
+  }
+});
+
+
 
 app.listen(4000, () => {
   console.log("Server is listening");
