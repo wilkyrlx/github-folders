@@ -34,7 +34,7 @@ app.use(
 );
 
 
-async function getGitHubUser({ code }: { code: string }): Promise<GithubResponse> {
+async function getGithubTotal({ code }: { code: string }): Promise<GithubResponse[]> {
   const githubToken = await axios
     .post(
       `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${code}`
@@ -45,13 +45,15 @@ async function getGitHubUser({ code }: { code: string }): Promise<GithubResponse
       throw error;
     });
 
-  const decoded = querystring.parse(githubToken);
+  // better type checking
+  const decodedAccessToken: string = querystring.parse(githubToken).access_token as string;
   const octokit = new Octokit({
-    //TODO: use oauth
-    auth: decoded.access_token as string
+    auth: decodedAccessToken
   })
-  const x = teamsHandler(octokit)
-  return x;
+  const general = await generalHandler(octokit);
+  const orgs = await orgsHandler(octokit);
+  const teams = await teamsHandler(octokit);
+  return [general, orgs, teams];
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
@@ -62,9 +64,10 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  const githubGeneral: GithubResponse = await getGitHubUser({ code });
-  const githubOrgs: GithubResponse = githubGeneral
-  const githubTeams: GithubResponse = githubGeneral
+  const totalResponse: GithubResponse[] = await getGithubTotal({ code });
+  const githubGeneral: GithubResponse = totalResponse[0];
+  const githubOrgs: GithubResponse = totalResponse[1];
+  const githubTeams: GithubResponse = totalResponse[2];
 
   generateCookiesFromResponse(res, githubGeneral, COOKIE_GENERAL);
   generateCookiesFromResponse(res, githubOrgs, COOKIE_ORGS);
@@ -73,9 +76,15 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
   res.redirect(`http://localhost:3000${path}`);
 });
 
+// FIXME: need to check if total cookie size is too big and develop an acceptable workaround
+// consider using localStorage or sessionStorage
 function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, cookieName: string) {
   const token: string = jwt.sign(githubRes, secret);
+
   // TODO: check if cookie is too big
+  const byteLengthUtf8 = (str: string) => new Blob([str]).size
+  console.log(byteLengthUtf8(token));
+
   res.cookie(cookieName, token, {
     httpOnly: true,
     domain: "localhost",
@@ -85,6 +94,7 @@ function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, c
 // =============================================================================
 // DATA ENDPOINTS - return minimum JSON data needed for frontend, parsed from github API
 // =============================================================================
+
 app.get("/api/general", (req: Request, res: Response) => {
   var cookie;
   cookie = get(req, `cookies[${COOKIE_GENERAL}]`);
