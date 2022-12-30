@@ -12,13 +12,25 @@ function OAuthInterface() {
   useEffect(() => {
     (async function () {
       const usr = await axios
-        .get(`http://localhost:4000/api/me`, {
+        .get(`http://localhost:4000/api/general`, {
           withCredentials: true,
+          credentials: 'include', // Don't forget to specify this if you need cookies
         })
         .then((res) => res.data)
         .then((data) => console.log(data));
 
-      setUser(usr);
+      // setUser(usr);
+    })();
+    (async function () {
+      const usr = await axios
+        .get(`http://localhost:4000/api/teams`, {
+          withCredentials: true,
+          credentials: 'include', // Don't forget to specify this if you need cookies
+        })
+        .then((res) => res.data)
+        .then((data) => console.log(data));
+
+      // setUser(usr);
     })();
   }, []);
 

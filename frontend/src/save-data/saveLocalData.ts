@@ -24,12 +24,13 @@ var local = (function () {
     return { set: setData, get: getData }
 })();
 
-//TODO: documentation
+// TODO: documentation
 function saveLocalData(items: stripeItem[]) {
     var toSave = { data: items };
     local.set('repoDataKey', toSave);
 }
-//TODO: documentation
+
+// TODO: documentation
 function loadLocalData({setItems, items }: StripeItemsProps) {
     var toLoad = local.get('repoDataKey')
     let newItems = items.slice();
@@ -46,7 +47,6 @@ function loadLocalData({setItems, items }: StripeItemsProps) {
         }
         const constructedStripeItem: stripeItem = new stripeItem({ name: element.name, link: element.link, typeItem: constructedStripeItemType, children: element.children })
         newItems.push(constructedStripeItem)
-        console.log(constructedStripeItem)
     });
     setItems(newItems);
 }

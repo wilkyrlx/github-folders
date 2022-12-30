@@ -28,6 +28,14 @@ export interface AppProps {
 
 
 function App() {
+	// FIXME: component mounts twice because index.tsx has react.strictmode. see https://stackoverflow.com/questions/61254372/my-react-component-is-rendering-twice-because-of-strict-mode/61897567#61897567
+	// runs when the component is mounted (only once)
+	useEffect(() => {
+		console.log('initializing app - loading data');
+		// TODO: better error handling when localStorage is empty
+		// loadLocalData({setItems, items});
+	}, []);
+
 	const [items, setItems] = useState<stripeItem[]>([])
 	const [directoryView, setDirectoryView] = useState<stripeItem[][]>([items])
 	const [view, setView] = useState<pageView>(pageView.MAIN)
