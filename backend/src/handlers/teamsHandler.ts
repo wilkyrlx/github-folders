@@ -5,8 +5,16 @@ import { apiObject, GithubResponse } from "../util/responseShape";
 
 
 
-// TODO: better docs
-// API endpoint for general data
+/**
+ * Gets all repos of the teams the user is on
+ * 
+ * Note: this may be too much data for some users - if some users are on teams with huge
+ * numbers of repos. Consider altering in some way/adding the chance to opt out 
+ * 
+ * IMPORTANT: will only collect the first 100 repos found on 1 page
+ * 
+ * @returns a github response with a list of all general Repo with certain fields from JSON output
+ */
 export async function teamsHandler(octokit: Octokit): Promise<GithubResponse> {
 
     const responseData: apiObject[] = [];

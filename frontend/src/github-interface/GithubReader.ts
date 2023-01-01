@@ -2,15 +2,11 @@ import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 import { githubToken } from "../private/GithubKey"
-import { Octokit } from "octokit"
 
-// TODO: perhaps move API calls to backend?
+const GENERAL_ENDPOINT = `http://localhost:4000/api/general`;
+const ORGS_ENDPOINT = `http://localhost:4000/api/orgs`;
+const TEAMS_ENDPOINT = `http://localhost:4000/api/teams`;
  
-// authorization for API calls
-const octokit = new Octokit({
-    //TODO: use oauth
-    auth: githubToken
-})
 
 /**
  * Generally, this function reads repos from the github API. Has mock testing capability
@@ -20,8 +16,9 @@ const octokit = new Octokit({
  */
 async function readGithub({ setItems, items }: StripeItemsProps) {
     // second param can be mockAPIRepsonse() or githubAPIResponse(). Latter for deployment
+    // TODO: option for user name and generate folders
     const githubRepos = await addGithubRepos(githubAPIResponse(), "wilkyrlx", false);
-    const githubOrgs = await addGithubOrgs(getOrgsAPIResponse());
+    const githubOrgs = await addGithubOrgs(getBackendResponse(ORGS_ENDPOINT));
 
     let newItems = items.slice();
     const allItems = [...newItems, ...githubRepos, ...githubOrgs];
@@ -35,8 +32,8 @@ async function readGithub({ setItems, items }: StripeItemsProps) {
  * @returns a list of all Repo with certain fields from JSON output
  */
 async function githubAPIResponse(): Promise<Repo[]> {
-    const generalRepos: Repo[] = await getGeneralReposAPIResponse();
-    const teamRepos: Repo[] = await getTeamReposAPIResponse();
+    const generalRepos: Repo[] = await getBackendResponse(GENERAL_ENDPOINT);
+    const teamRepos: Repo[] = await getBackendResponse(TEAMS_ENDPOINT);
 
     // concat lists together
     return generalRepos.concat(teamRepos);
@@ -46,75 +43,20 @@ async function githubAPIResponse(): Promise<Repo[]> {
 //========================= Backend Mechanics ==================================
 //==============================================================================
 
-// TODO: abstract this section
-
-/**
- * Gets all repos for which the user is an owner or collaborator
- * 
- * Note: certain repos may not be visible here, such as (but not limited to)
- * repos where user is a contributor but not a collaborator. Those repos are handled 
- * in other functions.
- * 
- * IMPORTANT: will only collect the first 100 repos found on 1 page
- * 
- * @returns a list of all general Repo with certain fields from JSON output
- */
-async function getGeneralReposAPIResponse(): Promise<Repo[]> {
+// TODO: should not call this a Repo, since orgs are not repos. Need a new name...
+async function getBackendResponse(endpoint: string): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
-    // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
-    
-    const backendRaw = await fetch(`http://localhost:4000/api/general`, {credentials: 'include'});
+    const backendRaw = await fetch(endpoint, {credentials: 'include'});
     const backendJson = await backendRaw.json();
     const backendData = await backendJson.data;
 
     for(const repo of backendData) {
-        // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
         
         repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner));
        
     };
     return repoListFull;
-}
-
-/**
- * Gets all repos of the teams the user is on
- * 
- * Note: this may be too much data for some users - if some users are on teams with huge
- * numbers of repos. Consider altering in some way/adding the chance to opt out 
- * 
- * IMPORTANT: will only collect the first 100 repos found on 1 page
- * 
- * @returns a list of all team Repo with certain fields from JSON output
- */
-async function getTeamReposAPIResponse(): Promise<Repo[]> {
-    const repoListFull: Repo[] = [];
-
-    // refer to https://docs.github.com/en/rest/teams/teams#list-teams-for-the-authenticated-user for documentation
-    const backendRaw = await fetch(`http://localhost:4000/api/teams`, {credentials: 'include'});
-    const backendJson = await backendRaw.json();
-    const backendData = await backendJson.data;
-
-    for(const team of backendData) {
-        // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
-        
-        repoListFull.push(new Repo(team.name, team.html_url, team.owner));
-       
-    };
-    return repoListFull;
-}
-
-async function getOrgsAPIResponse(): Promise<Repo[]> {
-    const orgsListFull: Repo[] = [];
-
-    const backendRaw = await fetch(`http://localhost:4000/api/orgs`, {credentials: 'include'});
-    const backendJson = await backendRaw.json();
-    const backendData = await backendJson.data;
-
-    for(const org of backendData) {
-        orgsListFull.push(new Repo(org.name, org.html_url, org.owner));
-    };
-    return orgsListFull;
 }
 
 //==============================================================================
