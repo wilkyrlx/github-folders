@@ -1,11 +1,13 @@
-# WIP: Github Folders - Chrome Extension
-The vision of this project is a simple, clean chrome extension to improve the github repository UI. Users will have access to a clean list of their repos, including:
+# WIP: Github Folders 
+The vision of this project is a simple, clean web app to improve the github repository UI. Users will have access to a clean list of their repos, including:
 - repos they own
 - repos they have committed to 
 - repos they have starred
 - repos they have added manually
 
 This project is born out of frusturation with the limited UI for github, with different repos listed in different places. Additionally, the user will be able to group repos as they see fit into folders.
+
+Originally, this project was envisioned as a chrome extension, but I have since decided to make it a web app. The chrome extension will be developed once a MVP is reached.
 
 ## Usage
 ### To Run Locally as a Website
