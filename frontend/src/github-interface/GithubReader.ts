@@ -1,7 +1,6 @@
 import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
-import { githubToken } from "../private/GithubKey"
 
 const GENERAL_ENDPOINT = `http://localhost:4000/api/general`;
 const ORGS_ENDPOINT = `http://localhost:4000/api/orgs`;
@@ -39,9 +38,7 @@ async function githubAPIResponse(): Promise<Repo[]> {
     return generalRepos.concat(teamRepos);
 }
 
-//==============================================================================
 //========================= Backend Mechanics ==================================
-//==============================================================================
 
 // TODO: should not call this a Repo, since orgs are not repos. Need a new name...
 async function getBackendResponse(endpoint: string): Promise<Repo[]> {
@@ -59,9 +56,7 @@ async function getBackendResponse(endpoint: string): Promise<Repo[]> {
     return repoListFull;
 }
 
-//==============================================================================
 //========================= Add Mechanics ======================================
-//==============================================================================
 
 /**
  * 

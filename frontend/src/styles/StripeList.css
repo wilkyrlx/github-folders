@@ -2,7 +2,8 @@
   border-radius: 10px;
   margin-bottom: 10px;
   margin-left: -30px;
-  width: 370px;
+  /* TODO: change for extension, width was 370px */
+  width: 500px;
   border:2px solid rgba(166, 166, 164, 0.769);
   padding:10px 50px 10px 10px;
   font-weight: bold;
