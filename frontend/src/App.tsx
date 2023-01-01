@@ -48,6 +48,7 @@ function App() {
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({...itemsPack})}>load data</button>
 			<button onClick={() => readGithub({...appPack})}>github API</button>
+
 			<OAuthInterface />
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }

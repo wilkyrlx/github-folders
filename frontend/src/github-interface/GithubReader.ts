@@ -42,6 +42,12 @@ async function githubAPIResponse(): Promise<Repo[]> {
     return generalRepos.concat(teamRepos);
 }
 
+//==============================================================================
+//========================= Backend Mechanics ==================================
+//==============================================================================
+
+// TODO: abstract this section
+
 /**
  * Gets all repos for which the user is an owner or collaborator
  * 
@@ -57,11 +63,17 @@ async function getGeneralReposAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
-    const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;
-    console.log(repoData);
-    repoData.forEach((repo: any) => {
-        repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner.login));
-    });
+    
+    const backendRaw = await fetch(`http://localhost:4000/api/general`, {credentials: 'include'});
+    const backendJson = await backendRaw.json();
+    const backendData = await backendJson.data;
+
+    for(const repo of backendData) {
+        // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
+        
+        repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner));
+       
+    };
     return repoListFull;
 }
 
@@ -79,14 +91,15 @@ async function getTeamReposAPIResponse(): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
     // refer to https://docs.github.com/en/rest/teams/teams#list-teams-for-the-authenticated-user for documentation
-    const teamData = (await octokit.request('GET /user/teams?page=1&per_page=100', {})).data;
-    for(const team of teamData) {
-        // TODO: this only gets 30? repos. May have to add a per_page param to request
+    const backendRaw = await fetch(`http://localhost:4000/api/teams`, {credentials: 'include'});
+    const backendJson = await backendRaw.json();
+    const backendData = await backendJson.data;
+
+    for(const team of backendData) {
         // refer to https://docs.github.com/en/rest/teams/teams#list-team-repositories for documentation
-        const teamRepoData = (await octokit.request(team.repositories_url, {})).data;
-        teamRepoData.forEach((repo: any) => {
-            repoListFull.push(new Repo(repo.name, repo.html_url, repo.owner.login));
-        });
+        
+        repoListFull.push(new Repo(team.name, team.html_url, team.owner));
+       
     };
     return repoListFull;
 }
@@ -94,13 +107,19 @@ async function getTeamReposAPIResponse(): Promise<Repo[]> {
 async function getOrgsAPIResponse(): Promise<Repo[]> {
     const orgsListFull: Repo[] = [];
 
-    const orgData = (await octokit.request('GET /user/memberships/orgs', {})).data;
-    for(const org of orgData) {
-        const orgSpecificData = (await octokit.request(org.organization.url, {})).data;
-        orgsListFull.push(new Repo(orgSpecificData.login, orgSpecificData.html_url, orgSpecificData.login));
+    const backendRaw = await fetch(`http://localhost:4000/api/orgs`, {credentials: 'include'});
+    const backendJson = await backendRaw.json();
+    const backendData = await backendJson.data;
+
+    for(const org of backendData) {
+        orgsListFull.push(new Repo(org.name, org.html_url, org.owner));
     };
     return orgsListFull;
 }
+
+//==============================================================================
+//========================= Add Mechanics ======================================
+//==============================================================================
 
 /**
  * 
