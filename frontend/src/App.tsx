@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { stripeItem, stripeItemType } from "./types/StripeItem";
 import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
@@ -6,7 +6,6 @@ import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
 import { loadLocalData, saveLocalData } from "./save-data/saveLocalData";
 import { readGithub } from "./github-interface/GithubReader";
-import OAuthInterface from "./github-interface/OAuthInterface";
 
 
 
@@ -34,12 +33,14 @@ function App() {
 		console.log('initializing app - loading data');
 		// TODO: better error handling when localStorage is empty
 		// loadLocalData({setItems, items});
+		// TODO: should this be called at start, or somewhere else? Also, need to double check fro duplicates with local storage
+		readGithub({setItems, items});
 	}, []);
 
 	const [items, setItems] = useState<stripeItem[]>([])
-	const [directoryView, setDirectoryView] = useState<stripeItem[][]>([items])
 	const [view, setView] = useState<pageView>(pageView.MAIN)
 
+	// TODO: format these packs better, also may want to remove some enum props. StripeItemsProps is a bad name
 	const itemsPack: StripeItemsProps = {setItems, items}
 	const appPack: AppProps = {setItems, items, setView}
 
@@ -48,11 +49,9 @@ function App() {
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({...itemsPack})}>load data</button>
 			<button onClick={() => readGithub({...appPack})}>github API</button>
-
-			<OAuthInterface />
 			<ControlPanel {...appPack} />
 			{ view === pageView.MAIN && <StripeList {...itemsPack} /> }
-			{ view === pageView.SETTINGS && <Settings /> }
+			{ view === pageView.SETTINGS && <Settings {...itemsPack} /> }
 		</div>
 	);
 }

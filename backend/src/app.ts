@@ -129,6 +129,12 @@ app.get("/api/teams", (req: Request, res: Response) => {
   }
 });
 
+// TODO: make this endpoint return the user's github username
+app.get("/api/user", (req: Request, res: Response) => {
+  const mockUser = { status: "success", user: "wilkyrlx" };
+  return res.send(mockUser);
+});
+
 
 
 app.listen(4000, () => {

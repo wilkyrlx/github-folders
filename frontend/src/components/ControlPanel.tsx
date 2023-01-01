@@ -163,6 +163,7 @@ function SettingsButton({ setItems, items, setExpanded, expanded, setView }: Set
 }
 
 // TODO: implement a FIFO queue for the items instead of global state
+// TODO: close all buttons when pressed (good for settings button)
 /**
  * Back button to navigate to the home pageview and initial stripeItems
  * @param appPack - props for setting items, view
