@@ -34,17 +34,11 @@ function OAuthInterface(appPack: StripeItemsProps) {
 
     const [user, setUser] = useState<string>("Link Account");
 
-
-    async function authProcess() {
-        authUserName();
-        // TODO: when should I read from the backend API?
-        // readGithub(appPack);
-    }
-
     async function authUserName() {
         const backendRaw = await fetch('http://localhost:4000/api/user');
         const backendJson = await backendRaw.json();
         const userName: string = backendJson.user;
+        // TODO: test that this works
         if (userName) {
             setUser(`Welcome, ${userName}`);
         }
@@ -53,7 +47,7 @@ function OAuthInterface(appPack: StripeItemsProps) {
     return (
         <div>
             {/* wrap this to preserve state*/}
-            <a href={AUTH_URL} onClick={() => authProcess()} style={{textDecoration:"none"}}>
+            <a href={AUTH_URL} onClick={() => authUserName()} style={{textDecoration:"none"}}>
                 <button type="button" className="button">
                     <span className="button_text">{user}</span>
                     <span className="button_icon">

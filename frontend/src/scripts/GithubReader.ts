@@ -2,19 +2,19 @@ import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 
+
 const GENERAL_ENDPOINT = `http://localhost:4000/api/general`;
 const ORGS_ENDPOINT = `http://localhost:4000/api/orgs`;
 const TEAMS_ENDPOINT = `http://localhost:4000/api/teams`;
  
 
 /**
- * Generally, this function reads repos from the github API. Has mock testing capability
+ * Generally, this function reads repos from the github API. It then adds them to the stripeItems
  * This is the only function that the model has access to
  * 
  * @param StripeItemProps - props to set new stripeItems and read existing stripeItems
  */
 async function readGithub({ setItems, items }: StripeItemsProps) {
-    // second param can be mockAPIRepsonse() or githubAPIResponse(). Latter for deployment
     // TODO: option for user name and generate folders
     const githubRepos = await addGithubRepos(githubAPIResponse(), "wilkyrlx", false);
     const githubOrgs = await addGithubOrgs(getBackendResponse(ORGS_ENDPOINT));
@@ -40,7 +40,6 @@ async function githubAPIResponse(): Promise<Repo[]> {
 
 //========================= Backend Mechanics ==================================
 
-// TODO: should not call this a Repo, since orgs are not repos. Need a new name...
 async function getBackendResponse(endpoint: string): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
@@ -111,17 +110,6 @@ async function addGithubOrgs(orgListPromise: Promise<Repo[]>): Promise<stripeIte
     })
 
     return addItems;    
-}
-
-// mocks an API call, use in place of githubAPIResponse
-async function mockAPIResponse(): Promise<Repo[]> {
-    const repoListFull: Repo[] = [];
-
-    repoListFull.push(new Repo("ccg", "https://github.com/brown-ccg/ccg-website", "brown-ccg"));
-    repoListFull.push(new Repo("ccg-tools", "https://github.com/brown-ccg", "brown-ccg"));
-    repoListFull.push(new Repo("esgaroth2", "https://github.com/wilkyrlx/esgaroth", "wilkyrlx"));
-
-    return repoListFull;
 }
 
 export { readGithub }

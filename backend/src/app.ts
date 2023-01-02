@@ -43,14 +43,14 @@ async function getGithubTotal({ code }: { code: string }): Promise<GithubRespons
       throw error;
     });
 
-  // better type checking
+  // TODO: better type checking
   const decodedAccessToken: string = querystring.parse(githubToken).access_token as string;
   const octokit = new Octokit({
     auth: decodedAccessToken
   })
-  const general = await generalHandler(octokit);
-  const orgs = await orgsHandler(octokit);
-  const teams = await teamsHandler(octokit);
+  const general: GithubResponse = await generalHandler(octokit);
+  const orgs: GithubResponse = await orgsHandler(octokit);
+  const teams: GithubResponse = await teamsHandler(octokit);
   return [general, orgs, teams];
 }
 
@@ -93,6 +93,7 @@ function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, c
 // DATA ENDPOINTS - return minimum JSON data needed for frontend, parsed from github API
 // =============================================================================
 
+// endpoint for general data (user repos, collab repos, etc.)
 app.get("/api/general", (req: Request, res: Response) => {
   var cookie;
   cookie = get(req, `cookies[${COOKIE_GENERAL}]`);
@@ -105,6 +106,7 @@ app.get("/api/general", (req: Request, res: Response) => {
   }
 });
 
+// endpoint for orgs data (user's orgs)
 app.get("/api/orgs", (req: Request, res: Response) => {
   var cookie;
   cookie = get(req, `cookies[${COOKIE_ORGS}]`);
@@ -117,6 +119,7 @@ app.get("/api/orgs", (req: Request, res: Response) => {
   }
 });
 
+// endpoint for teams data (repos in user's teams)
 app.get("/api/teams", (req: Request, res: Response) => {
   var cookie;
   cookie = get(req, `cookies[${COOKIE_TEAMS}]`);

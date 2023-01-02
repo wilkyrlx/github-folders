@@ -39,7 +39,7 @@ function App() {
 		console.log('initializing app');
 		loadLocalData({ setItems, items });
 		// TODO: should this be called at start, or somewhere else? Also, need to double check for duplicates with local storage
-		// readGithub({setItems, items});
+		readGithub({setItems, items});
 	}, []);
 
 
@@ -67,7 +67,7 @@ function App() {
 		<div className="app">
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({ ...itemsPack })}>load data</button>
-			<button onClick={() => readGithub({ ...appPack })}>github API</button>
+			<button onClick={() => readGithub({ ...itemsPack })}>github API</button>
 			<ControlPanel {...appPack} />
 			{view === pageView.MAIN && <StripeList setPermItems={setPermItems} permItems={permItems}/>}
 			{view === pageView.SETTINGS && <Settings {...itemsPack} />}

@@ -1,10 +1,10 @@
-//TODO: documentation
-
-import { SetStateAction } from "react";
 import { StripeItemsProps } from "../App";
 import { stripeItem, stripeItemType } from "../types/StripeItem";
 
-// https://stackoverflow.com/questions/34951170/save-json-to-chrome-storage-local-storage
+/**
+ * Local storage wrapper
+ * Adapted from https://stackoverflow.com/questions/34951170/save-json-to-chrome-storage-local-storage
+ */
 var local = (function () {
 
     var setData = function (key: string, obj: any) {
