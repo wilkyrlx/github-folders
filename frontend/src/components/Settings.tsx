@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { StripeItemsProps } from '../App';
-import { readGithub } from '../github-interface/GithubReader';
+import { readGithub } from '../scripts/GithubReader';
 import { githubClientID } from '../private/GithubKey';
 import '../styles/Settings.css';
 

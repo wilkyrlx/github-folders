@@ -24,16 +24,27 @@ var local = (function () {
     return { set: setData, get: getData }
 })();
 
-// TODO: documentation
+/**
+ * Save data to local storage
+ * @param items - stripeItems to save
+ */
 function saveLocalData(items: stripeItem[]) {
     var toSave = { data: items };
     local.set('repoDataKey', toSave);
 }
 
-// TODO: documentation
+/**
+ * Loads data from local storage
+ * Since stripeItemType is an enum, we need to convert the id to the enum before
+ * constructing the stripeItem
+ */
 function loadLocalData({setItems, items }: StripeItemsProps) {
-    var toLoad = local.get('repoDataKey')
     let newItems = items.slice();
+
+    var toLoad = local.get('repoDataKey')
+    if (!toLoad) {
+        return;
+    }
     toLoad.data.forEach((element: stripeItem) => {
         var constructedStripeItemType: stripeItemType;
         if (element.typeItem.id == 1) {
@@ -42,6 +53,8 @@ function loadLocalData({setItems, items }: StripeItemsProps) {
             constructedStripeItemType = stripeItemType.DIRECTORY;
         } else if (element.typeItem.id == 3) {
             constructedStripeItemType = stripeItemType.ORGANIZATION;
+        } else if (element.typeItem.id == 4) {
+            constructedStripeItemType = stripeItemType.AD;
         } else {
             throw new Error("Invalid stripeItemType id");
         }

@@ -4,8 +4,8 @@ import { ControlPanel } from "./components/ControlPanel";
 import StripeList from "./components/StripeList";
 import { pageView } from "./types/pageView";
 import { Settings } from "./components/Settings";
-import { loadLocalData, saveLocalData } from "./save-data/saveLocalData";
-import { readGithub } from "./github-interface/GithubReader";
+import { loadLocalData, saveLocalData } from "./scripts/saveLocalData";
+import { readGithub } from "./scripts/GithubReader";
 
 
 
@@ -30,11 +30,10 @@ function App() {
 	// FIXME: component mounts twice because index.tsx has react.strictmode. see https://stackoverflow.com/questions/61254372/my-react-component-is-rendering-twice-because-of-strict-mode/61897567#61897567
 	// runs when the component is mounted (only once)
 	useEffect(() => {
-		console.log('initializing app - loading data');
-		// TODO: better error handling when localStorage is empty
-		// loadLocalData({setItems, items});
+		console.log('initializing app');
+		loadLocalData({setItems, items});
 		// TODO: should this be called at start, or somewhere else? Also, need to double check fro duplicates with local storage
-		readGithub({setItems, items});
+		// readGithub({setItems, items});
 	}, []);
 
 	const [items, setItems] = useState<stripeItem[]>([])
