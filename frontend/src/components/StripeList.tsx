@@ -1,21 +1,21 @@
-import { Reorder } from "framer-motion";
 import "../styles/StripeList.css"
+import { Reorder } from "framer-motion";
 import { StripeItemsProps } from "../App";
 import { StripeListBar } from "./StripeListBar";
 import { stripeItemType } from "../types/StripeItem";
 
 
-
-function StripeList({ setItems, items }: StripeItemsProps) {
+// TODO: documentation (and maybe enums + rename)
+function StripeList({ setPermItems, permItems }: { setPermItems: any, permItems: any }) {
 
 	// Actual list of items
 	return (
 		<div>
-			<Reorder.Group axis="y" values={items}
-				onReorder={setItems}>
-				{items.map((item) => (
+			<Reorder.Group axis="y" values={permItems}
+				onReorder={setPermItems}>
+				{permItems.map((item: any) => (
 					<Reorder.Item key={item.id} value={item} className={borderColor(item.typeItem)} >
-						<StripeListBar item={item} setItems={setItems} items={items} />
+						<StripeListBar item={item} setItems={setPermItems} items={permItems} />
 					</Reorder.Item>
 				))}
 			</Reorder.Group>
