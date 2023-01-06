@@ -1,6 +1,7 @@
 {
   "functions": [
     {
+      "public": "public",
       "source": "functions",
       "codebase": "default",
       "ignore": [
