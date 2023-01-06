@@ -8,7 +8,7 @@ import '../styles/Settings.css';
 const GITHUB_CLIENT_ID = githubClientID;
 const gitHubRedirectURL = "http://localhost:4000/api/auth/github";
 const PATH = "/";
-const SCOPE = "admin:org admin:public_key admin:repo_hook project repo user";
+const SCOPE = "admin:org admin:public_key admin:repo_hook project repo user read:org";
 
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${gitHubRedirectURL}?path=${PATH}&scope=${SCOPE}`;
 

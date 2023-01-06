@@ -8,9 +8,11 @@ import cors from "cors";
 import { githubToken, githubClientID, githubClientSecret } from "./private/GithubKey";
 import { GithubResponse } from "./util/responseShape";
 import { Octokit } from "octokit";
+import * as functions from "firebase-functions";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { generalHandler } from "./handlers/generalHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
+ 
 
 const GITHUB_CLIENT_ID = githubClientID;
 const GITHUB_CLIENT_SECRET = githubClientSecret;
@@ -48,6 +50,7 @@ async function getGithubTotal({ code }: { code: string }): Promise<GithubRespons
   const octokit = new Octokit({
     auth: decodedAccessToken
   })
+  console.log("octokit token: ", decodedAccessToken);
   const general: GithubResponse = await generalHandler(octokit);
   const orgs: GithubResponse = await orgsHandler(octokit);
   const teams: GithubResponse = await teamsHandler(octokit);
@@ -143,3 +146,5 @@ app.get("/api/user", (req: Request, res: Response) => {
 app.listen(4000, () => {
   console.log("Server is listening");
 });
+
+exports.app = functions.https.onRequest(app);
