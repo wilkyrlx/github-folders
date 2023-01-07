@@ -5,8 +5,9 @@ import { githubClientID } from '../private/GithubKey';
 import '../styles/Settings.css';
 
 // Constants for OAuth URL
+const BASE_URL: string = process.env.REACT_APP_BASE_URL || "http://localhost:4000/"; 
 const GITHUB_CLIENT_ID = githubClientID;
-const gitHubRedirectURL = "http://localhost:4000/api/auth/github";
+const gitHubRedirectURL = BASE_URL + "api/auth/github";
 const PATH = "/";
 const SCOPE = "admin:org admin:public_key admin:repo_hook project repo user read:org";
 
@@ -27,7 +28,7 @@ function Settings(itemsPack: StripeItemsProps) {
 
 function OAuthInterface(appPack: StripeItemsProps) {
 
-    // TODO: This is a hacky way to get the user name to display on the button
+    // TODO: This is a hacky way to get the user name to display on the button. Function should be in GithubReader.ts
     useEffect(() => {
         authUserName();
       }, []);
@@ -35,7 +36,7 @@ function OAuthInterface(appPack: StripeItemsProps) {
     const [user, setUser] = useState<string>("Link Account");
 
     async function authUserName() {
-        const backendRaw = await fetch('http://localhost:4000/api/user');
+        const backendRaw = await fetch(BASE_URL + 'api/user');
         const backendJson = await backendRaw.json();
         const userName: string = backendJson.user;
         // TODO: test that this works

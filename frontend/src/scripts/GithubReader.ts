@@ -2,10 +2,10 @@ import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 
-
-const GENERAL_ENDPOINT = `http://localhost:4000/api/general`;
-const ORGS_ENDPOINT = `http://localhost:4000/api/orgs`;
-const TEAMS_ENDPOINT = `http://localhost:4000/api/teams`;
+const BASE_URL: string = process.env.REACT_APP_BASE_URL || "http://localhost:4000/";
+const GENERAL_ENDPOINT = BASE_URL + `api/general`;
+const ORGS_ENDPOINT = BASE_URL + `api/orgs`;
+const TEAMS_ENDPOINT = BASE_URL + `api/teams`;
  
 
 /**
