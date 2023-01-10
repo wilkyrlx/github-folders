@@ -29,8 +29,8 @@ app.use(cookieParser());
 
 
 
-const GITHUB_CLIENT_ID = githubClientID;
-const GITHUB_CLIENT_SECRET = githubClientSecret;
+const GITHUB_CLIENT_ID = process.env.NODE_GITHUB_CLIENT_ID;
+const GITHUB_CLIENT_SECRET = process.env.NODE_GITHUB_CLIENT_SECRET;
 // TODO: rewatch tutorial to check what the difference between secrets is
 const secret = githubClientSecret;
 // multiple cookies for different data

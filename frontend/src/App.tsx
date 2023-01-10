@@ -65,7 +65,7 @@ function App() {
 
 	return (
 		<div className="app">
-			<p>This is {process.env.REACT_APP_NOT_SECRET_CODE}</p>
+			<p>This is {process.env.REACT_APP_GITHUB_TOKEN}</p>
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({ ...itemsPack })}>load data</button>
 			<button onClick={() => readGithub({ ...itemsPack })}>github API</button>

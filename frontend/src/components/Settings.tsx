@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StripeItemsProps } from '../App';
 import { readGithub } from '../scripts/GithubReader';
-import { githubClientID } from '../private/GithubKey';
 import '../styles/Settings.css';
 
 // Constants for OAuth URL
 // TODO: better error checking here
-const BASE_URL: string = process.env.REACT_APP_BASE_URL || "ERROR WITH ENV FILE"; 
-const GITHUB_CLIENT_ID = githubClientID;
+const BASE_URL: string = process.env.REACT_APP_BASE_URL as string; 
+const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID as string;
 const gitHubRedirectURL = BASE_URL + "/api/auth/github";
 const PATH = "/";
 const SCOPE = "admin:org admin:public_key admin:repo_hook project repo user read:org";

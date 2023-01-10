@@ -3,7 +3,7 @@ import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 
 // TODO: better error checking with env file
-const BASE_URL: string = process.env.REACT_APP_BASE_URL || "ERROR WITH ENV FILE";
+const BASE_URL: string = process.env.REACT_APP_BASE_URL as string;
 const GENERAL_ENDPOINT = BASE_URL + `/api/general`;
 const ORGS_ENDPOINT = BASE_URL + `/api/orgs`;
 const TEAMS_ENDPOINT = BASE_URL + `/api/teams`;
