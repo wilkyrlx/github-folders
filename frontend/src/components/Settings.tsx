@@ -5,9 +5,10 @@ import { githubClientID } from '../private/GithubKey';
 import '../styles/Settings.css';
 
 // Constants for OAuth URL
-const BASE_URL: string = process.env.REACT_APP_BASE_URL || "http://localhost:4000/"; 
+// TODO: better error checking here
+const BASE_URL: string = process.env.REACT_APP_BASE_URL || "ERROR WITH ENV FILE"; 
 const GITHUB_CLIENT_ID = githubClientID;
-const gitHubRedirectURL = BASE_URL + "api/auth/github";
+const gitHubRedirectURL = BASE_URL + "/api/auth/github";
 const PATH = "/";
 const SCOPE = "admin:org admin:public_key admin:repo_hook project repo user read:org";
 
@@ -33,10 +34,10 @@ function OAuthInterface(appPack: StripeItemsProps) {
         authUserName();
       }, []);
 
-    const [user, setUser] = useState<string>("Link Account");
+    const [user, setUser] = useState<string>();
 
     async function authUserName() {
-        const backendRaw = await fetch(BASE_URL + 'api/user');
+        const backendRaw = await fetch(BASE_URL + '/api/user');
         const backendJson = await backendRaw.json();
         const userName: string = backendJson.user;
         // TODO: test that this works
@@ -48,6 +49,7 @@ function OAuthInterface(appPack: StripeItemsProps) {
     return (
         <div>
             {/* wrap this to preserve state*/}
+            {/* TODO: conditionally render button based on if user is present*/}
             <a href={AUTH_URL} onClick={() => authUserName()} style={{textDecoration:"none"}}>
                 <button type="button" className="button">
                     <span className="button_text">{user}</span>

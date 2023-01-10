@@ -64,7 +64,8 @@ async function getGithubTotal({ code }: { code: string }): Promise<GithubRespons
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
-  const code = get(req, "query.code");
+  // TODO: check if code is valid
+  const code = get(req, "query.code") as string;
   const path = get(req, "query.path", "/");
 
   if (!code) {

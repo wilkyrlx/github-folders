@@ -2,10 +2,11 @@ import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 
-const BASE_URL: string = process.env.REACT_APP_BASE_URL || "http://localhost:4000/";
-const GENERAL_ENDPOINT = BASE_URL + `api/general`;
-const ORGS_ENDPOINT = BASE_URL + `api/orgs`;
-const TEAMS_ENDPOINT = BASE_URL + `api/teams`;
+// TODO: better error checking with env file
+const BASE_URL: string = process.env.REACT_APP_BASE_URL || "ERROR WITH ENV FILE";
+const GENERAL_ENDPOINT = BASE_URL + `/api/general`;
+const ORGS_ENDPOINT = BASE_URL + `/api/orgs`;
+const TEAMS_ENDPOINT = BASE_URL + `/api/teams`;
  
 
 /**
