@@ -18,7 +18,7 @@ import { GithubResponse } from "./util/responseShape";
 // TODO: manage user provisions via https://console.cloud.google.com/functions/list?authuser=1&project=github-folders&supportedpurview=project
 
 export const helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
+  functions.logger.info("Hello logs!", { structuredData: true });
   response.send("Hello from Firebase!");
 });
 
@@ -29,8 +29,8 @@ app.use(cookieParser());
 
 
 
-const GITHUB_CLIENT_ID = process.env.NODE_GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.NODE_GITHUB_CLIENT_SECRET;
+const GITHUB_CLIENT_ID: string = process.env.NODE_GITHUB_CLIENT_ID || "NO ENV";
+const GITHUB_CLIENT_SECRET: string = process.env.NODE_GITHUB_CLIENT_SECRET || "NO ENV";
 // TODO: rewatch tutorial to check what the difference between secrets is
 const secret = githubClientSecret;
 // multiple cookies for different data
@@ -40,7 +40,7 @@ const COOKIE_TEAMS = "github-jwt-teams";
 
 
 
-async function getGithubTotal({ code }: { code: string }): Promise<GithubResponse[]> {
+async function getGithubTotal(code: string): Promise<GithubResponse[]> {
   const githubToken = await axios
     .post(
       `https://github.com/login/oauth/access_token?client_id=${GITHUB_CLIENT_ID}&client_secret=${GITHUB_CLIENT_SECRET}&code=${code}`
@@ -64,18 +64,24 @@ async function getGithubTotal({ code }: { code: string }): Promise<GithubRespons
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
+  functions.logger.log("auth github and version is: " + githubClientID);
   // TODO: check if code is valid
-  const code = get(req, "query.code") as string;
+  const code: string = get(req, "query.code") as string;
   const path = get(req, "query.path", "/");
 
   if (!code) {
     throw new Error("No code!");
   }
 
-  const totalResponse: GithubResponse[] = await getGithubTotal({ code });
-  const githubGeneral: GithubResponse = totalResponse[0];
-  const githubOrgs: GithubResponse = totalResponse[1];
-  const githubTeams: GithubResponse = totalResponse[2];
+  // const totalResponse: GithubResponse[] = await getGithubTotal(code);
+  // const githubGeneral: GithubResponse = totalResponse[0];
+  // const githubOrgs: GithubResponse = totalResponse[1];
+  // const githubTeams: GithubResponse = totalResponse[2];
+
+  // mock responses
+  const githubGeneral: GithubResponse = { status: "ok", data: [{ name: "general", html_url: "https://github.com", owner: "xx" }] };
+  const githubOrgs: GithubResponse = { status: "ok", data: [{ name: "orgs", html_url: "https://github.com", owner: "xx" }] };
+  const githubTeams: GithubResponse = { status: "ok", data: [{ name: "teams", html_url: "https://github.com", owner: "x" }] };
 
   generateCookiesFromResponse(res, githubGeneral, COOKIE_GENERAL);
   generateCookiesFromResponse(res, githubOrgs, COOKIE_ORGS);
@@ -88,6 +94,7 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
 // consider using localStorage or sessionStorage
 function generateCookiesFromResponse(res: Response, githubRes: GithubResponse, cookieName: string) {
   const token: string = jwt.sign(githubRes, secret);
+  console.log(`token for ${cookieName}: ${githubRes}`);
 
   // TODO: check if cookie is too big
   const byteLengthUtf8 = (str: string) => new Blob([str]).size
