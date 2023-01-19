@@ -9,7 +9,6 @@ import querystring from "querystring";
 import { generalHandler } from "./handlers/generalHandler";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
-import { githubClientID, githubClientSecret } from "./private/GithubKey";
 import { GithubResponse } from "./util/responseShape";
 
 // Start writing functions
