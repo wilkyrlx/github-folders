@@ -2,6 +2,7 @@ import { StripeItemsProps } from "../App"
 import { stripeItem, stripeItemType } from "../types/StripeItem"
 import { Repo } from "../types/repo"
 
+// TODO: endpoints need token param
 // TODO: better error checking with env file
 const BASE_URL: string = process.env.REACT_APP_BASE_URL as string;
 const GENERAL_ENDPOINT = BASE_URL + `/api/general`;
@@ -16,35 +17,31 @@ const TEAMS_ENDPOINT = BASE_URL + `/api/teams`;
  * @param StripeItemProps - props to set new stripeItems and read existing stripeItems
  */
 async function readGithub({ setItems, items }: StripeItemsProps) {
+    const queryParameters = new URLSearchParams(window.location.search)
+    const rawToken: string = queryParameters.get("token") as string;
+    const tokenForURL = `?token=${rawToken}`
+
+    const generalRepos: Repo[] = await getBackendResponse(GENERAL_ENDPOINT + tokenForURL);
+    const teamRepos: Repo[] = await getBackendResponse(TEAMS_ENDPOINT + tokenForURL);
+    generalRepos.concat(teamRepos);
+
     // TODO: option for user name and generate folders
-    const githubRepos = await addGithubRepos(githubAPIResponse(), "wilkyrlx", false);
-    const githubOrgs = await addGithubOrgs(getBackendResponse(ORGS_ENDPOINT));
+    const githubRepos = await addGithubRepos(generalRepos, "wilkyrlx", false);
+    const githubOrgs = await addGithubOrgs(getBackendResponse(ORGS_ENDPOINT + tokenForURL));
 
     let newItems = items.slice();
     const allItems = [...newItems, ...githubRepos, ...githubOrgs];
 	setItems(allItems);
 }
 
-/**
- * Fetches a list of user repos from github API with auth, including fields from
- * the Repo class such as (but not limited to) name, full_name, html_url.
- * 
- * @returns a list of all Repo with certain fields from JSON output
- */
-async function githubAPIResponse(): Promise<Repo[]> {
-    const generalRepos: Repo[] = await getBackendResponse(GENERAL_ENDPOINT);
-    const teamRepos: Repo[] = await getBackendResponse(TEAMS_ENDPOINT);
 
-    // concat lists together
-    return generalRepos.concat(teamRepos);
-}
 
 //========================= Backend Mechanics ==================================
 
 async function getBackendResponse(endpoint: string): Promise<Repo[]> {
     const repoListFull: Repo[] = [];
 
-    const backendRaw = await fetch(endpoint, {credentials: 'include'});
+    const backendRaw = await fetch(endpoint);
     const backendJson = await backendRaw.json();
     const backendData = await backendJson.data;
 
@@ -65,8 +62,8 @@ async function getBackendResponse(endpoint: string): Promise<Repo[]> {
  * @param personalName - name of personal github account. I.e. user wilkyrlx would be "wilkyrlx"
  * @param makePersonalDirectory - false normally, true if user wants a separate directory for personal repos
  */
-async function addGithubRepos(repoListPromise: Promise<Repo[]>, personalName: string, makePersonalDirectory: boolean): Promise<stripeItem[]> {
-    const repoList: Repo[] = await repoListPromise;
+async function addGithubRepos(repoListPromise: Repo[], personalName: string, makePersonalDirectory: boolean): Promise<stripeItem[]> {
+    const repoList: Repo[] = repoListPromise;
     // map of owner name to list of stripeItems. Owner could be user (wilkyrlx), organization, class, etc.
     let ownerMap: Map<string, stripeItem[]> = new Map();
 

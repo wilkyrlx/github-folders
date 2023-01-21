@@ -22,7 +22,13 @@ export const helloWorld = functions.https.onRequest((request, response) => {
 
 const app = express();
 
-app.use(cors({ origin: true }));
+const corsOptions = {
+  origin: '*',
+  credentials: true,            //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+}
+
+app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const GITHUB_CLIENT_ID: string = process.env.NODE_GITHUB_CLIENT_ID || "NO ENV";
 const GITHUB_CLIENT_SECRET: string = process.env.NODE_GITHUB_CLIENT_SECRET || "NO ENV";
@@ -47,7 +53,7 @@ async function getGithubToken(code: string): Promise<string> {
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
-  // TODO: check if code is valid
+  // TODO: check if code is valid to prevent errors
   const code: string = get(req, "query.code") as string;
   const path = get(req, "query.path", "/");
 
@@ -55,16 +61,13 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  const rawToken: string = await getGithubToken(code) || "ERROR";
-
-  // mock responses
-  // const githubGeneral: GithubResponse = { status: "ok", data: [{ name: "general", html_url: "https://github.com", owner: "xx" }] };
-  // const githubOrgs: GithubResponse = { status: "ok", data: [{ name: "orgs", html_url: "https://github.com", owner: "xx" }] };
-  // const githubTeams: GithubResponse = { status: "ok", data: [{ name: "teams", html_url: "https://github.com", owner: "x" }] };
-
+  // FIXME: remove the hardcoded token, this is the error point. Something with CORS?
+  const rawToken: string = await getGithubToken(code) || "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";
+  console.log("raw token: ", rawToken);
+  
   // TODO: change to encrypt, jwt just encodes
   const encryptedToken: string = rawToken;
-  res.redirect(`http://localhost:3000${path}?code=${encryptedToken}`);
+  res.redirect(`http://localhost:3000${path}?token=${encryptedToken}`);
 });
 
 
@@ -85,25 +88,29 @@ app.get("/api/orgs", async (req: Request, res: Response) => {
 });
 
 // endpoint for teams data (user's teams)
-app.get("/api/teams", async (req: Request, res: Response) => {  
+app.get("/api/teams", async (req: Request, res: Response) => {
   return handleGithubResponse(req, res, teamsHandler);
 });
 
+/**
+ * Sends a JSON GithubResponse with repos/orgs given a token from the request params
+ * @param req - a request with a token in the query params
+ * @param res - a response to send the data
+ * @param handler - a function that accesses the Github API via Octokit
+ *  and returns a GithubResponse
+ */
 async function handleGithubResponse(req: Request, res: Response, handler: (octokit: Octokit) => Promise<GithubResponse>) {
   const token: string = get(req, "query.token") as string;
-  console.log("token from general: ", token);
-  const octokit = new Octokit( {auth: token,} );
+  const octokit = new Octokit({ auth: token, });
 
-  // TODO: remove this mock response and uncomment data
-   const data: GithubResponse = { status: "success", data: [{ name: "general", html_url: "https://github.com", owner: "xx" }] };
-  // const data: GithubResponse = await handler(octokit);
-  
+  //const data: GithubResponse = { status: "success", data: [{ name: "general", html_url: "https://github.com", owner: "xx" }] };
+  const data: GithubResponse = await handler(octokit);
 
   if (data.status === "success") {
     return res.send(data);
   } else {
     // TODO: does this work
-    return res.status(500).send({error: handler.name + " error"});
+    return res.status(500).send({ error: handler.name + " error" });
   }
 }
 
