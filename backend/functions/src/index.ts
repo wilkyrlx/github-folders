@@ -62,7 +62,8 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
   }
 
   // FIXME: remove the hardcoded token, this is the error point. Something with CORS?
-  const rawToken: string = await getGithubToken(code) || "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";
+  // second part is for testing only
+  const rawToken: string = await getGithubToken(code) || process.env.NODE_GITHUB_TOKEN || "NO ENV";
   console.log("raw token: ", rawToken);
   
   // TODO: change to encrypt, jwt just encodes
