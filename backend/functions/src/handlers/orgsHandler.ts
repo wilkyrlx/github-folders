@@ -1,12 +1,15 @@
-import axios from "axios";
 import { Octokit } from "octokit";
-import { githubToken } from "../private/GithubKey";
 import { apiObject, GithubResponse } from "../util/responseShape";
 
 
 
-// TODO: better docs
-// API endpoint for orgs
+/**
+ * Gets all organizations for which the user is a member
+ * 
+ * IMPORTANT: will only collect the first 100 repos found on 1 page
+ * 
+ * @returns a github response with a list of all orgs from JSON output
+ */
 export async function orgsHandler(octokit: Octokit): Promise<GithubResponse> {
 
     const responseData: apiObject[] = [];

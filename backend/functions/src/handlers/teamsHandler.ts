@@ -1,6 +1,4 @@
-import axios from "axios";
 import { Octokit } from "octokit";
-import { githubToken } from "../private/GithubKey";
 import { apiObject, GithubResponse } from "../util/responseShape";
 
 

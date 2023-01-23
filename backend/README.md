@@ -6,6 +6,7 @@ Expected server capabilities include:
 Much of the OAuth server functionality is credit to [TomDoesTech](https://www.youtube.com/watch?v=qUE4-kSlPIk)
 
 ## Usage
+// TODO: update this section and clean up directory structure
 To run the server locally, cd into the backend directory and use any of the following commands:
 - npm start
 - npm run dev

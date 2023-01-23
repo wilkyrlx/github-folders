@@ -65,6 +65,7 @@ function App() {
 
 	return (
 		<div className="app">
+			<p>This is {process.env.REACT_APP_BASE_URL}</p>
 			<button onClick={() => saveLocalData(items)}>save data</button>
 			<button onClick={() => loadLocalData({ ...itemsPack })}>load data</button>
 			<button onClick={() => readGithub({ ...itemsPack })}>github API</button>

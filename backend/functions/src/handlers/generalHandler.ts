@@ -1,6 +1,4 @@
-import axios from "axios";
 import { Octokit } from "octokit";
-import { githubToken } from "../private/GithubKey";
 import { apiObject, GithubResponse } from "../util/responseShape";
 
 
@@ -18,6 +16,7 @@ import { apiObject, GithubResponse } from "../util/responseShape";
  */
 export async function generalHandler(octokit: Octokit): Promise<GithubResponse> {
 
+    
     const responseData: apiObject[] = [];
     // refer to https://docs.github.com/en/rest/repos/repos#list-repositories-for-the-authenticated-user for documentation    
     const repoData = (await octokit.request('GET /user/repos?affiliation=owner,collaborator&page=1&per_page=100', {})).data;

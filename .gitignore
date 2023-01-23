@@ -1,3 +1,4 @@
-node_modules
+.local.env
+.prod.env
+
 private
-mock-data
