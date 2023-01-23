@@ -4,12 +4,12 @@ import express, { Request, Response } from "express";
 import * as functions from "firebase-functions";
 import { get } from "lodash";
 import { Octokit } from "octokit";
-import jwt from "jsonwebtoken";
 import querystring from "querystring";
 import { generalHandler } from "./handlers/generalHandler";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
 import { GithubResponse } from "./util/responseShape";
+import { GITHUB_CLIENT_ID_PRIV, GITHUB_CLIENT_SECRET_PRIV } from "./private/GithubKeys";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -30,8 +30,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
-const GITHUB_CLIENT_ID: string = process.env.NODE_GITHUB_CLIENT_ID || "NO ENV";
-const GITHUB_CLIENT_SECRET: string = process.env.NODE_GITHUB_CLIENT_SECRET || "NO ENV";
+// FIXME: issue with env, returns NO ENV. Quick fix: use private file for now
+const GITHUB_CLIENT_ID: string = process.env.NODE_GITHUB_CLIENT_ID || GITHUB_CLIENT_ID_PRIV || "NO ENV";
+const GITHUB_CLIENT_SECRET: string = process.env.NODE_GITHUB_CLIENT_SECRET || GITHUB_CLIENT_SECRET_PRIV || "NO ENV";
 const ENCRYPTION_SECRET: string = process.env.NODE_ENCRYPTION_SECRET || "NO ENV";
 
 
@@ -48,12 +49,10 @@ async function getGithubToken(code: string): Promise<string> {
 
   // TODO: better type checking
   const decodedAccessToken: string = querystring.parse(githubToken).access_token as string;
-  console.log("octokit token: ", decodedAccessToken);
   return decodedAccessToken;
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
-  // TODO: check if code is valid to prevent errors
   const code: string = get(req, "query.code") as string;
   const path = get(req, "query.path", "/");
 
@@ -61,9 +60,7 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
     throw new Error("No code!");
   }
 
-  // FIXME: remove the hardcoded token, this is the error point. Something with CORS?
-  // second part is for testing only
-  const rawToken: string = await getGithubToken(code) || process.env.NODE_GITHUB_TOKEN || "NO ENV";
+  const rawToken: string = await getGithubToken(code);
   console.log("raw token: ", rawToken);
   
   // TODO: change to encrypt, jwt just encodes
