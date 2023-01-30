@@ -16,6 +16,9 @@ Like any react project, simply install the dependencies and use `npm start` to o
 ### To Build as a Chrome Extension
 Run `npm run build`. Next, navigate to [chrome extensions](chrome://extensions/) and click the button that says "load unpacked." Navigate to the build directory of the project and select the build folder. This will load the extension locally, and you can demo it as you would with any other Chrome extension (opening it by clicking the icon in the top right)
 
+### To view Online as a standalone app
+Visit the website at [https://github-folders.web.app/](https://github-folders.web.app/). Please note that the website is not yet functional, and is still in development.
+
 ### To Install from the Chrome Extension Store
 Coming soon! :)
 
