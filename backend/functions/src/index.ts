@@ -9,7 +9,10 @@ import { generalHandler } from "./handlers/generalHandler";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
 import { GithubResponse } from "./util/responseShape";
-import { GITHUB_CLIENT_ID_PRIV, GITHUB_CLIENT_SECRET_PRIV } from "./private/GithubKeys";
+import { env } from "./private/env.dev";
+import * as admin from "firebase-admin";
+
+admin.initializeApp();
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -20,20 +23,19 @@ export const helloWorld = functions.https.onRequest((request, response) => {
   response.send("Hello from Firebase!");
 });
 
-const app = express();
 
 const corsOptions = {
   origin: '*',
   credentials: true,            //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 }
-
+const app = express();
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 // FIXME: issue with env, returns NO ENV. Quick fix: use private file for now
-const GITHUB_CLIENT_ID: string = process.env.NODE_GITHUB_CLIENT_ID || GITHUB_CLIENT_ID_PRIV || "NO ENV";
-const GITHUB_CLIENT_SECRET: string = process.env.NODE_GITHUB_CLIENT_SECRET || GITHUB_CLIENT_SECRET_PRIV || "NO ENV";
-const ENCRYPTION_SECRET: string = process.env.NODE_ENCRYPTION_SECRET || "NO ENV";
+const ENV_DEBUGGER = env.VERSION || "NO ENV";
+const GITHUB_CLIENT_ID: string = env.GITHUB_CLIENT_ID|| "NO ENV";
+const GITHUB_CLIENT_SECRET: string =  env.GITHUB_CLIENT_SECRET || "NO ENV";
 
 
 async function getGithubToken(code: string): Promise<string> {
@@ -53,6 +55,8 @@ async function getGithubToken(code: string): Promise<string> {
 }
 
 app.get("/api/auth/github", async (req: Request, res: Response) => {
+  console.log("ENV_DEBUGGER: ", ENV_DEBUGGER);
+
   const code: string = get(req, "query.code") as string;
   const path = get(req, "query.path", "/");
 
@@ -65,6 +69,7 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
   
   // TODO: change to encrypt, jwt just encodes
   const encryptedToken: string = rawToken;
+  // TODO: add redirect path from env
   res.redirect(`http://localhost:3000${path}?token=${encryptedToken}`);
 });
 

@@ -1,4 +1,6 @@
 .local.env
 .prod.env
+.env.dev
+.env.prod
 
 private
