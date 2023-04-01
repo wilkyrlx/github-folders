@@ -9,7 +9,7 @@ import { generalHandler } from "./handlers/generalHandler";
 import { orgsHandler } from "./handlers/orgsHandler";
 import { teamsHandler } from "./handlers/teamsHandler";
 import { GithubResponse } from "./util/responseShape";
-import { env } from "./private/env.dev";
+import { env } from "./private/env.dev";      // change .dev to .prod for production
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
@@ -32,10 +32,10 @@ const corsOptions = {
 const app = express();
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
-// FIXME: issue with env, returns NO ENV. Quick fix: use private file for now
 const ENV_DEBUGGER = env.VERSION || "NO ENV";
 const GITHUB_CLIENT_ID: string = env.GITHUB_CLIENT_ID|| "NO ENV";
 const GITHUB_CLIENT_SECRET: string =  env.GITHUB_CLIENT_SECRET || "NO ENV";
+const REDIRECT_PATH: string = env.REDIRECT_PATH || "NO ENV";
 
 
 async function getGithubToken(code: string): Promise<string> {
@@ -70,7 +70,7 @@ app.get("/api/auth/github", async (req: Request, res: Response) => {
   // TODO: change to encrypt, jwt just encodes
   const encryptedToken: string = rawToken;
   // TODO: add redirect path from env
-  res.redirect(`http://localhost:3000${path}?token=${encryptedToken}`);
+  res.redirect(`${REDIRECT_PATH}${path}?token=${encryptedToken}`);
 });
 
 
